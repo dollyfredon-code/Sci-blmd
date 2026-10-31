@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Data Collector SCI BLMD</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2f7d32">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+:root{--bg:#f6f8f4;--card:#ffffff;--text:#1d2a1d;--muted:#5d6b5d;--accent:#2f7d32;--on-accent:#ffffff;--soft:#e3f1e3;--border:#cfd9cf;--danger:#b3261e;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a12;--card:#1c261c;--text:#e6efe6;--muted:#9db09d;--accent:#7bc67e;--on-accent:#10210f;--soft:#223a23;--border:#324532;--danger:#f2b8b5;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121a12;--card:#1c261c;--text:#e6efe6;--muted:#9db09d;--accent:#7bc67e;--on-accent:#10210f;--soft:#223a23;--border:#324532;--danger:#f2b8b5;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.4}
+main{max-width:560px;margin:0 auto;padding:16px 16px 140px}
+#nav{display:contents}
+#nav .nb{position:fixed;z-index:20;display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;padding:0;line-height:1;border-radius:50%;background:var(--card);border:1px solid var(--border);color:var(--muted);box-shadow:0 1px 4px rgba(0,0,0,.15)}
+#nav #mHome,#nav #mList,#nav #mFci{bottom:calc(16px + env(safe-area-inset-bottom,0px));width:auto;height:auto;padding:6px;border:none;border-radius:0;background:transparent;box-shadow:none;color:var(--text)}
+#nav #mHome{left:16px}
+#nav #mFci{right:15px;padding:7px}
+#nav #mList{left:50%;transform:translateX(-50%)}
+#nav #mHome.on,#nav #mList.on,#nav #mFci.on{color:var(--accent)}
+#nav .circ{right:16px;bottom:calc(80px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border:2px solid var(--accent);color:var(--accent)}
+#mMenu{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));right:8px;z-index:20;display:inline-flex;padding:6px;line-height:1;border:none;border-radius:0;background:transparent;box-shadow:none;color:var(--text)}
+#thModal{position:fixed;inset:0;z-index:55;background:transparent;display:flex;align-items:center;justify-content:center;padding:16px}
+.thbox{background:transparent;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:var(--text);border:1px solid var(--border);border-radius:var(--rad,14px);padding:16px;width:100%;max-width:380px;max-height:88vh;overflow:auto}
+html[data-shape="carre"]{--rad:0px;--rad2:0px}
+html[data-shape="ovale"]{--rad:30px;--rad2:22px}
+.swg{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:8px}
+.sw{width:30px;height:30px;border-radius:50%;padding:0;border:2px solid var(--border)}
+.sw.on{outline:3px solid var(--text);outline-offset:2px}
+html.noframe .card:not(.result),html.noframe .paper{background:transparent;border-color:transparent}
+#mLock{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));right:46px;z-index:20;display:inline-flex;padding:6px;line-height:1;border:none;border-radius:0;background:transparent;box-shadow:none;color:var(--accent)}
+#mLock.open{color:var(--muted)}
+#mLock.off{opacity:.4}
+#nav .circ.on{background:var(--accent);color:var(--on-accent)}
+.rec{display:flex;align-items:center;gap:8px;width:100%;text-align:left;margin-top:8px}
+#pwModal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}
+.pwbox{background:var(--card);border:1px solid var(--border);border-radius:var(--rad,14px);padding:16px;width:100%;max-width:360px}
+h1{font-size:1.3rem;margin:0 0 14px;padding-right:96px}
+h2{font-size:1.05rem;margin:0}
+.sub{color:var(--muted);margin:0 0 14px;font-size:.9rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--rad,14px);padding:14px;margin-top:10px}
+label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:4px}
+.fld{margin-top:12px}
+input{width:100%;font:inherit;font-size:1rem;padding:10px;border:1px solid var(--border);border-radius:var(--rad2,10px);background:var(--bg);color:var(--text)}
+input:focus{outline:2px solid var(--accent);outline-offset:1px}
+button{font:inherit;cursor:pointer;border-radius:var(--rad2,10px);border:1px solid var(--border);background:var(--card);color:var(--text);padding:9px 12px}
+button:disabled{opacity:.35;cursor:default}
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.tab{font-weight:600}
+.tab.on{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.add{border-style:dashed;color:var(--accent);border-color:var(--accent)}
+.head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.del{color:var(--danger)}
+.pl{display:flex;gap:8px;align-items:flex-end;margin-top:10px}
+.pl>div{flex:1;min-width:0}
+.num{flex:0 0 28px;height:28px;border-radius:50%;background:var(--soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.85rem;margin-bottom:6px}
+.main{width:100%;margin-top:12px;border-color:var(--accent);color:var(--accent);font-weight:600}
+.result{background:var(--soft);border-color:var(--accent)}
+.result p{margin:4px 0;font-size:.92rem}
+.big{font-size:1.6rem!important;font-weight:700;color:var(--accent);margin:4px 0 0!important}
+.err{color:var(--danger);font-size:.85rem;margin:6px 0 0}
+.warn{color:var(--danger);border:1px solid var(--danger);border-radius:10px;padding:8px 10px;font-size:.85rem;margin:10px 0 0}
+.sec{font-size:.8rem;color:var(--muted);margin:18px 0 0}
+.hint{color:var(--muted);font-size:.8rem;margin-top:20px}
+.reset{width:100%;margin-top:12px;color:var(--muted)}
+.paper{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:var(--rad,14px);padding:14px;margin-top:10px}
+.paper label{color:var(--muted);font-size:.8rem;margin-bottom:4px}
+.paper input,.paper select{width:100%;font:inherit;font-size:1rem;padding:10px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:var(--rad2,10px)}
+.paper input:focus,.paper select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.td input,.td select{padding:6px;font-size:.9rem;border-radius:6px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:8px}
+.g .fld{margin-top:0}
+.fh{display:flex;gap:8px;flex-wrap:wrap}
+.fh>div{border:1px solid var(--border);border-radius:10px;background:var(--soft);padding:10px}
+.fh>div:first-child{flex:2;min-width:220px}
+.ft{font-weight:800;font-size:.95rem}
+.fs{font-size:.72rem;color:var(--muted);font-style:italic}
+.fr{text-align:right;min-width:200px;flex:1}
+.paper .coop{font-weight:700;text-align:right;border:none;background:transparent;padding:2px 0}
+@media screen{.paper .coop{border-bottom:1px dashed #999}}
+.bar{background:var(--accent);color:var(--on-accent);border-radius:8px;padding:7px 10px;font-weight:700;font-size:.85rem;margin:16px 0 0}
+.sublabel{font-weight:700;font-size:.8rem;margin-top:10px}
+.tw{overflow-x:auto;margin-top:8px}
+.tg{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));min-width:700px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.th{background:var(--accent);color:var(--on-accent);font-size:.7rem;font-weight:700;padding:6px 4px}
+.td{border-top:1px solid var(--border);padding:3px}
+.foot{font-size:.65rem;color:var(--muted);margin-top:14px;border-top:1px solid var(--border);padding-top:6px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.xt{border-collapse:collapse;font-size:.78rem;white-space:nowrap;min-width:100%}
+.xt th{background:var(--accent);color:var(--on-accent);padding:6px 8px;text-align:left;font-weight:700}
+.xt td{border:1px solid var(--border);padding:5px 8px}
+.xt td.n{text-align:right}
+.xt .sum td{font-weight:700;background:var(--soft)}
+body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
+.sheet{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sheet .fld{margin-top:0;display:flex;flex-direction:column;justify-content:flex-end}
+.sheet label{font-size:.75rem;line-height:1.2}
+.sheet>.head,.sheet>.pl,.sheet>.main,.sheet>.warn,.sheet>.err,.sheet>.full{grid-column:1/-1}
+.sheet>.full{margin-top:6px}
+.eh{display:flex;gap:8px;font-size:.75rem;color:var(--muted)}
+.eh span{flex:1;min-width:0}
+.eh span:first-child{flex:0 0 28px}
+.er{align-items:flex-end;margin-top:6px}
+.er .num{background:transparent;border:1.5px solid var(--border);color:var(--muted);margin-bottom:6px}
+.pl>.num{flex:0 0 28px;width:28px;height:28px;border-radius:50%}
+#mode .ic{background:transparent;color:var(--text);display:inline-flex;border:none;border-bottom:3px solid transparent;border-radius:0;line-height:1;padding:4px 8px;opacity:.55}
+#mode .ic.on{background:transparent;color:var(--accent);border-bottom-color:var(--accent);opacity:1}
+@media print{@page{size:A4;margin:10mm}body *{visibility:hidden}#fci,#fci *{visibility:visible}#fci{position:absolute;left:0;top:0;width:100%}.noprint{display:none!important}.paper{background:#fff!important;color:#111!important;border:none;padding:0}.paper label,.fs,.foot{color:#444!important}.paper input,.paper select{background:#fff!important;color:#111!important;border:none;border-bottom:1px solid #000;border-radius:0;padding:1px 0;font-size:10px;-webkit-appearance:none;appearance:none}.fh>div{background:#fff!important;border:1px solid #333;border-radius:0}.bar,.th{background:#333!important;color:#fff!important;border-radius:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}.tg{border:1px solid #333;border-radius:0;min-width:0}.td{border-top:1px solid #999}.tw{overflow:visible}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Data Collector SCI BLMD</h1>
+  <div id="home"><div class="card"><h2>Accueil</h2><p class="sub" id="homeMsg" style="margin:6px 0 0">Appuie sur la balance pour voir les dossiers enregistrés, ou sur + pour créer un nouveau dossier.</p></div><div id="homeTabs"></div></div>
+  <div id="list" hidden><div class="card"><h2>Dossiers enregistrés</h2><div id="bkList"></div></div></div>
+  <div id="fiches" hidden><div class="card"><h2>Fiches d’enquête</h2><p class="sub" style="margin:6px 0 10px">Choisis un producteur pour continuer sa fiche d’enquête.</p><div id="fList"></div></div></div>
+  <div id="estim" hidden>
+    <div class="card">
+      <h2>Producteur</h2>
+      <div class="fld"><label for="hNom">Nom et prénom du producteur</label><input id="hNom" autocomplete="off"></div>
+      <div class="fld"><label for="hCode">Code producteur</label><input id="hCode" autocomplete="off"></div>
+    </div>
+  <h2 style="margin:16px 0 0">Estimation du rendement de vanille verte</h2>
+  <div class="tabs" id="plist" style="margin-top:12px"></div>
+  <div id="pview" hidden>
+  <div class="tabs" id="part" style="margin:12px 0">
+    <button type="button" class="tab on" id="pSimple">Inventaire exhaustif</button>
+    <button type="button" class="tab" id="pStr">Sondage stratifié</button>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <div id="sheet"></div>
+  <p class="sec" id="secTot">TOTAL DE LA PARCELLE</p>
+  <div class="card result" id="tot"></div>
+  <button class="reset" id="pdel" type="button">Supprimer cette parcelle</button>
+  </div>
+  <button class="reset" id="reset" type="button">Effacer le producteur et l’estimation</button>
+  <p class="hint">Astuce : dans le menu de ton navigateur, choisis « Ajouter à l’écran d’accueil » pour l’ouvrir comme une appli. Les données restent enregistrées sur ce téléphone.</p>
+  </div>
+  <div id="fci" hidden></div>
+  <section id="backup" class="card noprint" hidden>
+    <h2>Sauvegarde</h2>
+    <p class="sub" id="bkInfo">Enregistre le dossier en cours : il apparaîtra dans l’Accueil.</p>
+    <div class="tools" id="bkTools"></div>
+    <div id="bkOut" hidden><label for="bkTa">Si le téléchargement n’a pas démarré, copie ce texte et colle-le dans une note ou un message.</label><textarea id="bkTa" rows="6" readonly style="width:100%;font:.8rem monospace;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:8px"></textarea></div>
+  </section>
+</main>
+<nav id="nav" class="noprint" aria-label="Navigation">
+    <button type="button" class="nb on" id="mHome" aria-label="Accueil" title="Accueil"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/></svg></button>
+    <button type="button" class="nb" id="mList" aria-label="Dossiers enregistrés" title="Dossiers enregistrés"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16"/><path d="M7 20h10"/><path d="M5 7h14"/><path d="M5 7 2.5 13.5a2.5 2.5 0 0 0 5 0z"/><path d="M19 7l-2.5 6.5a2.5 2.5 0 0 0 5 0z"/></svg></button>
+    <button type="button" class="nb circ" id="mEst" aria-label="Nouveau dossier" title="Nouveau dossier"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button>
+    <button type="button" class="nb" id="mFci" aria-label="Fiche d’enquête du producteur" title="Fiche d’enquête du producteur"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h8l4 4v12H6z"/><path d="M14 4v4h4"/><path d="M9 11.5h6"/><path d="M9 15.5h6"/></svg></button>
+</nav>
+<div id="pwModal" class="noprint" hidden>
+  <div class="pwbox" role="dialog" aria-modal="true" aria-labelledby="pwT">
+    <h2 id="pwT"></h2>
+    <p class="sub" id="pwD" style="margin:6px 0 0"></p>
+    <div class="fld"><label for="pw1">Mot de passe</label><input id="pw1" type="password" autocomplete="off"></div>
+    <div class="fld" id="pw2w"><label for="pw2">Confirmer le mot de passe</label><input id="pw2" type="password" autocomplete="off"></div>
+    <p class="err" id="pwE" hidden></p>
+    <div class="tools"><button type="button" id="pwOk" class="main" style="margin-top:0;width:auto">Valider</button><button type="button" id="pwNo">Annuler</button></div>
+  </div>
+</div>
+<script>window.sciLink=function(root,p){var n=0;root.querySelectorAll("label+input,label+select").forEach(function(i){if(!i.id){i.id=p+(n++);}i.previousElementSibling.htmlFor=i.id;});};</script>
+<script>
+(function(){
+  var KEY="sciblmd-estimation-v3";
+  function newA(){return {m:"A",surface:"",pieds:"",balais:"",gousses:"",poids:""};}
+  function newC(d){return {m:"C",d:d||"moy",surface:"",pieds:"",poids:"",pl:[{b:"",g:""}]};}
+  function lab(sh){return sh.m==="A"?"Méthode A":(sh.d==="forte"?"Méthode C forte densité":"Méthode C densité moyenne");}
+  function fresh(){return {part:"simple",simple:newA(),cur:0,sheets:[newA(),newC("moy")]};}
+  function okSheet(x){return !!x&&typeof x==="object"&&(x.ech==null||Array.isArray(x.ech))&&(x.m==="A"||(x.m==="C"&&Array.isArray(x.pl)&&x.pl.length>0&&x.pl.every(function(p){return !!p&&typeof p==="object";})));}
+  function okP(o){return !!o&&Array.isArray(o.sheets)&&o.sheets.length>0&&o.sheets.every(okSheet);}
+  function norm(P){
+    if(!(P.cur>=0&&P.cur<P.sheets.length)){P.cur=0;}
+    if(!okSheet(P.simple)||P.simple.m!=="A"){P.simple=newA();}
+    [P.simple].concat(P.sheets).forEach(function(x){function vide(r){return !r||(!String(r.b||"").trim()&&!String(r.g||"").trim());}if(x.ech){while(x.ech.length>5&&vide(x.ech[x.ech.length-1])){x.ech.pop();}}});
+    if(P.part!=="strates"){P.part="simple";}
+  }
+  var W={parcels:[fresh()],cur:0},S,inP=false;
+  try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);
+    if(o&&Array.isArray(o.parcels)&&o.parcels.length&&o.parcels.every(okP)){W=o;}
+    else if(okP(o)){W={parcels:[o],cur:0};}}}catch(e){}
+  W.parcels.forEach(norm);
+  if(!(W.cur>=0&&W.cur<W.parcels.length)){W.cur=0;}
+  S=W.parcels[W.cur];
+
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(W));}catch(e){}}
+  function num(v){var x=parseFloat(String(v).replace(",","."));return isNaN(x)?0:x;}
+  function fmt(x,d){return x.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d});}
+  function $(id){return document.getElementById(id);}
+  function mk(tag,cls,txt){var e=document.createElement(tag);if(cls){e.className=cls;}if(txt!=null){e.textContent=txt;}return e;}
+  function btn(cls,txt,fn){var b=mk("button",cls,txt);b.type="button";b.addEventListener("click",fn);return b;}
+
+  function twoStep(b,ask,action){
+    var armed=false,orig=b.textContent;
+    b.addEventListener("click",function(){
+      if(!armed){armed=true;b.textContent=ask;setTimeout(function(){armed=false;b.textContent=orig;},4000);return;}
+      armed=false;b.textContent=orig;action();
+    });
+  }
+
+  function calc(sh,simple){
+    var w=num(sh.poids),wf=String(sh.poids).trim()!=="",wOk=w>=8&&w<=15;
+    var r={ok:false,warn:"",err:(wf&&!wOk)?"Le poids doit être compris entre 8 g et 15 g.":"",lines:[],kg:0};
+    var s=num(sh.surface),p=num(sh.pieds),pok=true;
+    if(p>0&&num(sh.total)>0&&p>num(sh.total)){r.err=r.err||"Le nombre de pieds productifs ne peut pas dépasser le nombre total de pieds.";pok=false;}
+    if(simple){
+      if(s>0.5){r.warn="L’inventaire exhaustif s’utilise sur une surface de 0,5 ha au maximum. Au-dessus, utilise le sondage stratifié.";pok=false;}
+    }else{
+      var rg=sh.m==="A"?[0,100]:(sh.d==="forte"?[300,1e9]:[100,300]);
+      var nm=sh.m==="A"?"La méthode A s’utilise sur une strate de 100 pieds productifs au maximum.":(sh.d==="forte"?"La méthode C forte densité s’utilise à partir de 300 pieds productifs.":"La méthode C densité moyenne s’utilise de 100 à 300 pieds productifs.");
+      if(!(p>0)){pok=false;}
+      else if(p<rg[0]||p>rg[1]){r.warn=nm;pok=false;}
+    }
+    if(sh.m==="A"){
+      /* aucune limite de surface pour la méthode A */
+      var gSim=0,b=num(sh.balais),g=num(sh.gousses);
+      {
+        var e=(sh.ech||[]).filter(function(x){return num(x.b)>0&&num(x.g)>0;});
+        if(e.length>=5&&num(sh.pieds)>0){
+          var mbp=e.reduce(function(a,x){return a+num(x.b);},0)/e.length,mgp=e.reduce(function(a,x){return a+num(x.g);},0)/e.length;
+          b=mbp*num(sh.pieds);g=mgp;gSim=e.reduce(function(a,x){return a+num(x.b)*num(x.g);},0)/e.length*num(sh.pieds);
+          r.lines.push("Pieds de l’échantillon pris en compte : "+e.length,"Balais moyens par pied : "+fmt(mbp,2),"Gousses moyennes par balai : "+fmt(mgp,2),"Total de balais estimé : "+fmt(b,0));
+        }else{b=0;g=0;
+          if(e.length<5){if(e.length||num(sh.pieds)>0){r.warn=r.warn||"Échantillon incomplet : "+e.length+" pied(s) complet(s) sur 5 minimum (balais et gousses par balai).";}}
+          else{r.warn=r.warn||"Renseigne le nombre de pieds productifs.";}
+        }
+      }
+      if(pok&&s>0&&b>0&&g>0&&wOk){
+        var gTot=gSim>0?gSim:b*g;r.ok=true;r.kg=gTot*w/1000;
+        r.gt=gTot;r.bt=b;r.lines.push("Nombre total de gousses : "+fmt(gTot,0));
+        if(num(sh.pieds)>0&&s>0){r.lines.push("Densité : "+fmt(num(sh.pieds)/s,0)+" pieds productifs par hectare");}
+      }
+    }else{
+      /* aucune limite de surface pour la méthode C */
+      var ok=sh.pl.filter(function(p){return num(p.b)>0&&num(p.g)>0;});
+      if(pok&&s>0&&ok.length&&wOk){
+        var mb=ok.reduce(function(a,p){return a+num(p.b);},0)/ok.length;
+        var mg=ok.reduce(function(a,p){return a+num(p.g);},0)/ok.length;
+        var n=s*10000/16,pn=mb*mg*w;
+        r.ok=true;r.kg=pn*n/1000;r.gt=mb*mg*n;r.bt=mb*n;
+        r.lines.push("Placettes saisies : "+ok.length,"Balais moyens par placette : "+fmt(mb,2),"Gousses moyennes par balai : "+fmt(mg,2),"Pn moyen : "+fmt(pn,0)+" g","Nombre de placettes N : "+fmt(n,0),"Nombre total de gousses estimé : "+fmt(mb*mg*n,0));
+      }
+    }
+    var gt=r.gt||0;function pc(n,p){return String(sh[p]==null?"":sh[p]).trim()!==""?num(sh[p]):(gt>0?num(sh[n])/gt*100:0);}
+    var tnc=pc("tncN","tncP"),tch=pc("tchN","tchP");r.tnc=tnc;r.tch=tch;
+    if(tnc<0||tch<0||tnc>100||tch>100){
+      r.ok=false;r.err=r.err||"TNC et TCH doivent être compris entre 0 et 100 %.";
+    }else if(r.ok){
+      var gm=num(sh.pieds)>0?r.gt/num(sh.pieds):0,pBrute=r.kg*(1-tnc/100),mTch=pBrute*tch/100;
+      if(gm>0){r.lines.push("Gousses matures par pied productif : "+fmt(gm,1));r.lines.push("Gousses nettes par pied : "+fmt(gm-gm*tnc/100,1));}
+      r.lines.push("TNC : "+fmt(tnc,1)+" % des gousses matures");
+      r.lines.push("Production brute (après TNC) : "+fmt(pBrute,1)+" kg");
+      r.lines.push("TCH ("+fmt(tch,1)+" %) : − "+fmt(mTch,1)+" kg");
+      r.kg=pBrute-mTch;
+    }
+    return r;
+  }
+
+  function parcelCode(i){var c="";try{c=String((JSON.parse(localStorage.getItem("sciblmd-home-v1")||"{}")||{}).code||"").trim();}catch(e){}var n=String(i+1);if(n.length<2){n="0"+n;}return c?c+"-"+n:"";}
+  $("hCode").addEventListener("input",function(){setTimeout(refresh,0);});
+  window.sciRows=function(raw){
+    var o=null,rows=[];try{o=JSON.parse(raw);}catch(e){}
+    var ps=o&&Array.isArray(o.parcels)?o.parcels:(o&&Array.isArray(o.sheets)?[o]:[]);
+    ps.forEach(function(P,pi){
+      if(!P||typeof P!=="object"){return;}
+      var simple=P.part!=="strates",shs=simple?[P.simple||newA()]:(Array.isArray(P.sheets)?P.sheets:[]);
+      shs.forEach(function(sh,si){
+        var r;try{r=calc(sh,simple);}catch(e){return;}
+        rows.push({parcelle:pi+1,code:P.code||"",strate:simple?0:si+1,meth:lab(sh),surface:num(sh.surface),pieds:num(sh.pieds),poids:num(sh.poids),ok:!!r.ok,bt:r.ok?r.bt:null,gt:r.ok?r.gt:null,tnc:r.ok?r.tnc:null,tch:r.ok?r.tch:null,kg:r.ok?r.kg:null,ln:r.ok?r.lines.map(function(t){var k=t.indexOf(" : "),a=k<0?t:t.slice(0,k),v=k<0?"":t.slice(k+3);if(/^TCH \(/.test(a)){a="TCH – gousses tombées déduites";}return [a.replace(/ estimé$/,""),v];}):[]});
+      });
+    });
+    return rows;
+  };
+  function goP(){$("pview").hidden=!inP;renderParcels();renderTabs();renderSheet();refresh();}
+  function renderParcels(){var t=$("plist");t.innerHTML="";
+    W.parcels.forEach(function(P,i){var on=inP&&i===W.cur;
+      t.appendChild(btn("tab"+(on?" on":""),"Parcelle "+(i+1)+(P.code?" · "+P.code:""),function(){
+        if(inP&&i===W.cur){inP=false;}else{W.cur=i;S=P;inP=true;}goP();}));});
+    t.appendChild(btn("add","+ Ajouter une parcelle",function(){W.parcels.push(fresh());W.cur=W.parcels.length-1;S=W.parcels[W.cur];inP=true;goP();}));
+    $("pdel").disabled=W.parcels.length<=1;}
+  function refresh(){
+    W.parcels.forEach(function(P,i){P.code=parcelCode(i);});
+    save();renderParcels();var pce=$("pCode");if(pce){pce.value=S.code||"";}
+    var simple=S.part==="simple",r=calc(simple?S.simple:S.sheets[S.cur],simple);
+    $("tabs").hidden=simple;$("secTot").hidden=simple;$("tot").hidden=simple;
+    $("pSimple").classList.toggle("on",simple);$("pStr").classList.toggle("on",!simple);
+    [["tnc","tncN","tncP"],["tch","tchN","tchP"]].forEach(function(a){var c0=simple?S.simple:S.sheets[S.cur],pe=$(a[0]+"P"),ce=$(a[0]+"C"),fp=String(c0[a[2]]==null?"":c0[a[2]]).trim()!=="";
+      if(pe&&document.activeElement!==pe&&!fp){pe.value=(r.gt>0&&String(c0[a[1]]||"").trim()!=="")?fmt(r[a[0]],2):"";}
+      if(ce&&document.activeElement!==ce&&fp){ce.value=r.gt>0?String(Math.round(r.gt*r[a[0]]/100)):"";}});
+    var cs=simple?S.simple:S.sheets[S.cur],pp=num(cs.pieds),pt=num(cs.total);
+    var e1=$("pPct"),e2=$("bPied");
+    if(e1){e1.value=(pp>0&&pt>0)?fmt(pp/pt*100,1)+" %":"";}
+    if(e2){e2.value=(r.bt>0&&pp>0)?fmt(r.bt/pp,2):"";}
+    $("warn").hidden=!r.warn;$("warn").textContent=r.warn;
+    $("err").hidden=!r.err;$("err").textContent=r.err;
+    var res=$("res");res.innerHTML="";
+    if(r.ok){
+      r.lines.forEach(function(t){res.appendChild(mk("p",null,t));});
+      res.appendChild(mk("p",null,"Production nette estimée (vanille verte)"));
+      res.appendChild(mk("p","big",fmt(r.kg,1)+" kg"));
+    }else{
+      res.appendChild(mk("p",null,"Complète les champs pour voir le rendement de cette strate."));
+    }
+    var tot=$("tot"),sum=0,cnt=0;tot.innerHTML="";
+    S.sheets.forEach(function(sh,i){
+      var c=calc(sh,false);
+      if(c.ok){sum+=c.kg;cnt++;}
+      tot.appendChild(mk("p",null,"Strate "+(i+1)+" ("+lab(sh)+") : "+(c.ok?fmt(c.kg,1)+" kg":"à compléter")));
+    });
+    var surf=S.sheets.reduce(function(a,sh){return a+num(sh.surface);},0);
+    tot.appendChild(mk("p",null,"Surface totale des strates : "+fmt(surf,2)+" ha"));
+    if(surf<=0){
+      tot.appendChild(mk("p",null,"Saisis la surface de chaque strate pour voir le total."));
+    }else if(surf<0.5){
+      tot.appendChild(mk("p","warn","Le sondage stratifié s’utilise sur 0,5 ha ou plus : la surface totale des feuilles (A + C) doit faire au moins 0,5 ha. Ajoute des strates ou corrige les surfaces."));
+    }else{
+      tot.appendChild(mk("p",null,"Total (strates complétées : "+cnt+" sur "+S.sheets.length+")"));
+      tot.appendChild(mk("p","big",fmt(sum,1)+" kg"));
+    }
+  }
+
+  function field(parent,label,obj,key,ph,cb){
+    var d=mk("div","fld"),i=mk("input");
+    d.appendChild(mk("label",null,label));
+    i.setAttribute("inputmode","decimal");if(ph){i.placeholder=ph;}
+    i.value=obj[key]==null?"":obj[key];
+    i.addEventListener("input",function(){obj[key]=i.value;if(cb){cb();}refresh();});
+    d.appendChild(i);parent.appendChild(d);return i;
+  }
+
+  function renderTabs(){
+    var t=$("tabs");t.innerHTML="";
+    S.sheets.forEach(function(sh,i){
+      t.appendChild(btn("tab"+(i===S.cur?" on":""),(i+1)+" · "+(sh.m==="A"?"A":(sh.d==="forte"?"C forte":"C moy.")),function(){S.cur=i;renderTabs();renderSheet();refresh();}));
+    });
+    t.appendChild(btn("add","+ A",function(){S.sheets.push(newA());S.cur=S.sheets.length-1;renderTabs();renderSheet();refresh();}));
+    t.appendChild(btn("add","+ C moy.",function(){S.sheets.push(newC("moy"));S.cur=S.sheets.length-1;renderTabs();renderSheet();refresh();}));
+    t.appendChild(btn("add","+ C forte",function(){S.sheets.push(newC("forte"));S.cur=S.sheets.length-1;renderTabs();renderSheet();refresh();}));
+  }
+
+  function renderSheet(){
+    var simple=S.part==="simple",sh=simple?S.simple:S.sheets[S.cur],box=$("sheet");box.innerHTML="";
+    var card=mk("div","card sheet"),head=mk("div","head");
+    head.appendChild(mk("h2",null,simple?"Inventaire exhaustif – Méthode A":"Strate "+(S.cur+1)+" – "+lab(sh)));
+    var del=mk("button","del","Supprimer");del.type="button";del.disabled=simple||S.sheets.length<=1;
+    twoStep(del,"Confirmer ?",function(){S.sheets.splice(S.cur,1);S.cur=Math.max(0,S.cur-1);renderTabs();renderSheet();refresh();});
+    head.appendChild(del);card.appendChild(head);var d0=mk("div","fld full"),i0=mk("input");d0.appendChild(mk("label",null,"Code parcelle (code producteur – n° de parcelle)"));i0.id="pCode";i0.readOnly=true;i0.placeholder="saisis d’abord le code producteur";i0.value=S.code||"";d0.appendChild(i0);card.appendChild(d0);
+    if(sh.m==="A"){
+      field(card,simple?"Surface de la parcelle (ha) – 0,5 maximum":"Surface de la strate (ha)",sh,"surface","ex. 0,3");
+      field(card,simple?"Nombre de pieds productifs":"Nombre de pieds productifs de la strate – 100 maximum",sh,"pieds","ex. 80");
+      field(card,"Nombre total de pieds (productifs + non productifs)",sh,"total","ex. 1200");
+      roField(card,"Pieds productifs sur pieds total (%)","pPct");
+      sampleBlock2();
+      field(card,"Poids d’une gousse (g) – entre 8 et 15",sh,"poids","ex. 10 ou 10,5");
+      roField(card,"Balais moyens par pied productif","bPied");
+    }else{
+      field(card,"Surface de la strate (ha)",sh,"surface","ex. 1");
+      
+      field(card,"Poids d’une gousse (g) – entre 8 et 15",sh,"poids","ex. 10 ou 10,5");
+      card.appendChild(mk("label","fld full","Placettes (16 m²)"));
+      sh.pl.forEach(function(p,i){
+        var row=mk("div","pl");
+        row.appendChild(mk("div","num",String(i+1)));
+        field(row,"Balais",p,"b");
+        field(row,"Gousses / balai",p,"g");
+        var d=mk("button","del","✕");d.type="button";d.disabled=sh.pl.length<=1;
+        d.addEventListener("click",function(){sh.pl.splice(i,1);renderSheet();refresh();});
+        row.appendChild(d);card.appendChild(row);
+      });
+      card.appendChild(btn("main","+ Ajouter une placette",function(){sh.pl.push({b:"",g:""});renderSheet();refresh();}));
+    }
+    var pLab=sh.m==="A"?(simple?"Nombre de pieds productifs":"Nombre de pieds productifs de la strate – 100 maximum"):"Nombre de pieds productifs de la strate – "+(sh.d==="forte"?"300 ou plus":"100 à 300");
+    if(!simple&&sh.m!=="A"){field(card,pLab,sh,"pieds","ex. 80");}
+    if(!simple&&sh.m!=="A"){field(card,"Nombre total de pieds (productifs + non productifs)",sh,"total","ex. 1200");}
+    if(!simple&&sh.m!=="A"){roField(card,"Pieds productifs sur pieds total (%)","pPct");}
+    if(!simple&&sh.m!=="A"){roField(card,"Balais moyens par pied productif","bPied");}
+    function roField(parent,label,id){var d=mk("div","fld"),i=mk("input");d.appendChild(mk("label",null,label));i.id=id;i.readOnly=true;i.placeholder="calculé automatiquement";d.appendChild(i);parent.appendChild(d);}
+    
+    var tncCnt=field(card,"Nombre de gousses non commercialisables",sh,"tncN","ex. 12",function(){sh.tncP="";});tncCnt.id="tncC";
+    
+    
+    var tchCnt=field(card,"Nombre de gousses tombées",sh,"tchN","ex. 30",function(){sh.tchP="";});tchCnt.id="tchC";
+    
+    pctField(card,"TNC – taux de gousses non commercialisables (%)","tncP",function(p,raw){fromPct("tncN",tncCnt,p,raw);});
+    pctField(card,"TCH – taux de chute nouaison (%)","tchP",function(p,raw){fromPct("tchN",tchCnt,p,raw);});
+    function pctField(parent,label,id,onPct){
+      var d=mk("div","fld"),i=mk("input");
+      d.appendChild(mk("label",null,label));
+      i.id=id;i.value=sh[id]==null?"":sh[id];i.setAttribute("inputmode","decimal");i.placeholder="saisir ou calcul automatique";
+      i.addEventListener("input",function(){onPct(num(i.value),i.value);refresh();});
+      d.appendChild(i);parent.appendChild(d);return i;
+    }
+    function fromPct(key,cnt,p,raw){sh[key]="";sh[key.replace("N","P")]=String(raw).trim();if(String(raw).trim()===""){cnt.value="";}}
+    function sampleBlock2(){
+      card.appendChild(mk("label","fld full","Échantillon de pieds productifs (minimum 5 pieds)"));
+      if(!sh.ech){sh.ech=[];}
+      while(sh.ech.length<5){sh.ech.push({b:"",g:""});}
+      
+      sh.ech.forEach(function(p,i){
+        var row=mk("div","pl er");
+        row.appendChild(mk("div","num",String(i+1)));
+        field(row,"Balais",p,"b");field(row,"Gousses / balai",p,"g");
+        var dl=mk("button","del","✕");dl.type="button";dl.disabled=sh.ech.length<=5;dl.setAttribute("aria-label","Supprimer ce pied");
+        dl.addEventListener("click",function(){sh.ech.splice(i,1);renderSheet();refresh();});
+        row.appendChild(dl);card.appendChild(row);
+      });
+      card.appendChild(btn("main","+ Ajouter un pied",function(){sh.ech.push({b:"",g:""});renderSheet();refresh();}));
+    }
+    var warn=mk("p","warn");warn.id="warn";warn.hidden=true;
+    var err=mk("p","err");err.id="err";err.hidden=true;
+    card.appendChild(warn);card.appendChild(err);
+    box.appendChild(card);window.sciLink(card,"s");
+    var res=mk("div","card result");res.id="res";box.appendChild(res);
+  }
+
+  twoStep($("reset"),"Appuie encore pour confirmer l’effacement",function(){window.SCI.clear();});
+  twoStep($("pdel"),"Confirmer la suppression ?",function(){W.parcels.splice(W.cur,1);W.cur=Math.max(0,W.cur-1);S=W.parcels[W.cur];inP=false;goP();});
+  function setPart(p){S.part=p;renderTabs();renderSheet();refresh();}
+  $("pSimple").addEventListener("click",function(){setPart("simple");});
+  $("pStr").addEventListener("click",function(){setPart("strates");});
+  setPart(S.part);
+})();
+</script>
+<script>
+(function(){
+  var KEY="sciblmd-fci-v1";
+  function fresh(){var f={coop:"Coopérative Mitsinjo Ny Ho Avy",campagne:"2024–2025",rows:[]};for(var i=0;i<8;i++){f.rows.push({});}return f;}
+  var F=fresh();
+  try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);if(o&&typeof o==="object"){F=Object.assign(F,o);if(!Array.isArray(F.rows)){F.rows=[];}F.rows=F.rows.map(function(r){return r&&typeof r==="object"?r:{};});while(F.rows.length<8){F.rows.push({});}}}}catch(e){}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(F));}catch(e){}}
+  function $(id){return document.getElementById(id);}
+  function mk(tag,cls,txt){var e=document.createElement(tag);if(cls){e.className=cls;}if(txt!=null){e.textContent=txt;}return e;}
+  var root=$("fci");
+
+  function ctl(obj,k,type,cls){
+    var i;
+    if(type==="sel"){i=mk("select");["","M","F"].forEach(function(v){var op=mk("option",null,v);op.value=v;i.appendChild(op);});}
+    else{i=mk("input");if(type==="date"){i.type="date";}else if(type==="num"){i.setAttribute("inputmode","decimal");}}
+    if(cls){i.className=cls;}
+    i.value=obj[k]||"";
+    function on(){obj[k]=i.value;save();}
+    i.addEventListener("input",on);i.addEventListener("change",on);
+    return i;
+  }
+  function fld(label,k,type){var d=mk("div","fld");d.appendChild(mk("label",null,label));d.appendChild(ctl(F,k,type));return d;}
+  function grid(items){var g=mk("div","g");items.forEach(function(x){g.appendChild(x);});return g;}
+
+  function build(){
+    root.innerHTML="";
+    var hh0={};try{hh0=JSON.parse(localStorage.getItem("sciblmd-home-v1")||"{}")||{};}catch(e){}
+    if(hh0.nom&&!F.nom){F.nom=hh0.nom;}if(hh0.code&&!F.code){F.code=hh0.code;}save();
+    var tools=mk("div","tools noprint");
+    var pb=mk("button","main","Télécharger / imprimer (A4)");pb.type="button";pb.style.marginTop="0";pb.style.width="auto";
+    var msg=mk("p","err noprint");msg.hidden=true;
+    pb.addEventListener("click",function(){try{window.print();}catch(e){msg.textContent="Impression impossible ici : ouvre la page directement dans Chrome.";msg.hidden=false;}});
+    var cb=mk("button","del","Effacer la fiche");cb.type="button";
+    var armed=false;
+    cb.addEventListener("click",function(){
+      if(!armed){armed=true;cb.textContent="Appuie encore pour confirmer";setTimeout(function(){armed=false;cb.textContent="Effacer la fiche";},4000);return;}
+      F=fresh();save();build();
+    });
+    var eb=mk("button",null,"Exporter la fiche (fichier)");eb.type="button";eb.addEventListener("click",function(){window.SCI.exportFci();});tools.appendChild(pb);tools.appendChild(eb);tools.appendChild(cb);root.appendChild(tools);root.appendChild(msg);
+
+    var paper=mk("div","paper");
+    var hd=mk("div","fh"),hl=mk("div"),hr=mk("div","fr");
+    hl.appendChild(mk("div","ft","FICHE DE CONTRÔLE INTERNE (FCI) — PRODUCTEUR VANILLE"));
+    hl.appendChild(mk("div","fs","Vanilla planifolia — Vente verte · Culture principale"));
+    var ce=ctl(F,"coop","txt","coop");ce.setAttribute("aria-label","Coopérative");hr.appendChild(ce);
+    hr.appendChild(mk("div","fs","UE 2018/848 · NOP USDA · FFL ECOCERT SA"));
+    hd.appendChild(hl);hd.appendChild(hr);paper.appendChild(hd);
+    paper.appendChild(grid([fld("N° de fiche FCI","fci"),fld("Campagne","campagne"),fld("Date de contrôle","dateControle","date"),fld("Durée de la visite","duree")]));
+
+    paper.appendChild(mk("div","bar","A — IDENTIFICATION DU PRODUCTEUR"));
+    paper.appendChild(grid([fld("Nom du producteur","nom"),fld("Genre","genre","sel"),fld("Code producteur","code"),fld("Année entrée BIOLANDES","annee","num"),fld("CIN n°","cin"),fld("Date de naissance","naissance","date"),fld("Commune","commune"),fld("Fokontany / Village","fokontany"),fld("Surnom","surnom"),fld("Téléphone","tel")]));
+
+    paper.appendChild(mk("div","bar","A.1 — Composition du ménage"));
+    paper.appendChild(grid([fld("Nombre de personnes à charge","charge","num"),fld("Nombre d’actifs agricoles","actifs","num")]));
+    paper.appendChild(mk("div","sublabel","Enfants scolarisés (M / F)"));
+    paper.appendChild(grid([fld("< 15 ans : garçons","s15m","num"),fld("< 15 ans : filles","s15f","num"),fld("< 15 ans : classe","s15c"),fld("> 15 ans : garçons","s15pm","num"),fld("> 15 ans : filles","s15pf","num"),fld("> 15 ans : classe","s15pc"),fld("Distance école","distEcole")]));
+    paper.appendChild(mk("div","sublabel","Enfants non scolarisés"));
+    paper.appendChild(grid([fld("< 15 ans : nombre","n15n","num"),fld("< 15 ans : sexe","n15s","sel"),fld("> 18 ans : nombre","n18n","num"),fld("> 18 ans : sexe","n18s","sel")]));
+
+    paper.appendChild(mk("div","bar","A.2 — Main d’œuvre agricole"));
+    var cols=[["Nb ouvriers","nb","num"],["Âge min.","age","num"],["Types travaux","types"],["Sexe","sexe","sel"],["Nb permanents","perm","num"],["Rémunération","remu"],["Période pic","pic"],["Repos hebdo.","repos"]];
+    var tw=mk("div","tw"),tg=mk("div","tg");
+    cols.forEach(function(c){tg.appendChild(mk("div","th",c[0]));});
+    F.rows.forEach(function(r){cols.forEach(function(c){var cell=mk("div","td");var el=ctl(r,c[1],c[2]||"txt");el.setAttribute("aria-label",c[0]);cell.appendChild(el);tg.appendChild(cell);});});
+    tw.appendChild(tg);paper.appendChild(tw);
+    paper.appendChild(mk("div","foot","SCI BIOLANDES Madagascar — Document interne confidentiel — À conserver dans le dossier producteur et présenter lors de l’audit externe · Page 1 / 8"));
+    root.appendChild(paper);window.sciLink(paper,"g");
+  }
+
+  function mode(m){var map={home:"mHome",list:"mList",est:"mEst",fci:"mFci",fiches:"mFci"};$("home").hidden=m!=="home";$("fiches").hidden=m!=="fiches";$("list").hidden=m!=="list";document.body.setAttribute("data-mode",m);$("estim").hidden=m!=="est";root.hidden=m!=="fci";$("backup").hidden=m==="home"||m==="list"||m==="fiches";$("mEst").hidden=m!=="list";["mHome","mList","mEst","mFci"].forEach(function(id){$(id).classList.toggle("on",id===map[m]);});try{window.scrollTo(0,0);}catch(e){}}
+  $("mEst").addEventListener("click",function(){if((!$("home").hidden||!$("list").hidden)&&window.SCI){window.SCI.fresh();return;}mode("est");});
+  $("mList").addEventListener("click",function(){mode("list");});
+  $("mFci").addEventListener("click",function(){mode("fiches");});
+  build();
+  var HK="sciblmd-home-v1",H={nom:"",code:"",parc:""};
+  try{var hr=localStorage.getItem(HK);if(hr){H=Object.assign(H,JSON.parse(hr));}}catch(e){}
+  [["hNom","nom"],["hCode","code"]].forEach(function(p){
+    var el=$(p[0]);el.value=H[p[1]]||"";
+    el.addEventListener("input",function(){H[p[1]]=el.value;try{localStorage.setItem(HK,JSON.stringify(H));}catch(e){}});
+  });
+  $("mHome").addEventListener("click",function(){mode("home");});
+  
+  var gt=null,gm=null;try{gt=localStorage.getItem("sciblmd-goto");gm=localStorage.getItem("sciblmd-msg");localStorage.removeItem("sciblmd-goto");localStorage.removeItem("sciblmd-msg");}catch(e){}
+  if(gm){$("homeMsg").textContent=gm;}
+  mode(gt==="est"||gt==="fci"?gt:(gt==="list"?"list":"home"));
+})();
+</script>
+<script>
+(function(){
+  var K=["sciblmd-estimation-v3","sciblmd-home-v1","sciblmd-fci-v1"],RK="sciblmd-records-v1",AK="sciblmd-active";
+  function $(i){return document.getElementById(i);}
+  function mk(t,c,x){var e=document.createElement(t);if(c){e.className=c;}if(x!=null){e.textContent=x;}return e;}
+  function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+  function set(k,v){try{if(v==null){localStorage.removeItem(k);}else{localStorage.setItem(k,v);}return true;}catch(e){return false;}}
+  function say(t){$("bkInfo").textContent=t;}
+  function recs(){try{var a=JSON.parse(get(RK)||"[]");return Array.isArray(a)?a:[];}catch(e){return [];}}
+  function snap(){var d={};K.forEach(function(k){d[k]=get(k);});return d;}
+  function name(){var h={};try{h=JSON.parse(get(K[1])||"{}")||{};}catch(e){}return [h.nom,h.code].filter(Boolean).join(" · ")||"Sans nom";}
+  var LK="sciblmd-locked",locked=get(LK)==="1"&&!!get(AK);
+  function clear(){K.slice(0,2).forEach(function(k){set(k,null);});set(AK,null);set(LK,null);}
+  function two(b,ask,fn){var on=false,o=b.textContent;b.addEventListener("click",function(){if(!on){on=true;b.textContent=ask;setTimeout(function(){on=false;b.textContent=o;},4000);return;}on=false;b.textContent=o;fn();});}
+  function saveCur(){var a=recs(),id=get(AK),r=null;a.forEach(function(x){if(x.id===id){r=x;}});
+    if(!r){r={id:String(Date.now())};a.push(r);set(AK,r.id);}
+    r.label=name();r.ts=new Date().toISOString();r.d=snap();
+    if(!set(RK,JSON.stringify(a))){say("Enregistrement impossible (stockage plein ou indisponible).");return false;}return true;}
+  function keepCur(){if(get(AK)||name()!=="Sans nom"){saveCur();}}
+  function openRec(r,to){keepCur();K.forEach(function(k){set(k,r.d&&r.d[k]);});set(AK,r.id);set(LK,"1");set("sciblmd-goto",to||"est");location.reload();}
+  function delRec(id){set(RK,JSON.stringify(recs().filter(function(x){return x.id!==id;})));if(get(AK)===id){set(AK,null);set(LK,null);locked=false;}render();}
+  function render(){var L=$("bkList");L.innerHTML="";
+    recs().slice().reverse().forEach(function(r){
+      var it=mk("div"),row=mk("button","rec"),ch=mk("div","tools"),o=mk("button",null,"Ouvrir"),d=mk("button","del","Effacer");
+      row.type="button";o.type="button";d.type="button";ch.hidden=true;var ic=mk("span");ic.innerHTML=LOCK;ic.style.display="inline-flex";row.appendChild(ic);row.appendChild(mk("span",null,r.label+" — "+(r.ts||"").slice(0,10)+(r.id===get(AK)?" (en cours)":"")));
+      row.addEventListener("click",function(){ch.hidden=!ch.hidden;});
+      o.addEventListener("click",function(){openRec(r);});
+      two(d,"Confirmer l’effacement ?",function(){needPw(function(){delRec(r.id);});});
+      ch.appendChild(o);ch.appendChild(d);it.appendChild(row);it.appendChild(ch);L.appendChild(it);});
+    if(!recs().length){L.appendChild(mk("p","sub","Aucun dossier enregistré. Appuie sur + pour créer un dossier, puis sur « Enregistrer ce dossier »."));}renderHome();renderFiches();}
+  function renderFiches(){
+    var C=$("fList");if(!C){return;}C.innerHTML="";
+    recs().slice().reverse().forEach(function(r){
+      var h={};try{h=JSON.parse((r.d&&r.d[K[1]])||"{}")||{};}catch(e){}
+      var b=mk("button","rec",[h.nom,h.code].filter(Boolean).join(" · ")||"Sans nom");b.type="button";
+      b.addEventListener("click",function(){openRec(r,"fci");});C.appendChild(b);
+    });
+    if(!recs().length){C.appendChild(mk("p","sub","Aucun producteur estimé. Crée d’abord un dossier avec la balance, puis enregistre-le."));}
+  }
+  function recTable(r){
+    var h={};try{h=JSON.parse((r.d&&r.d[K[1]])||"{}")||{};}catch(e){}
+    var rows=window.sciRows?window.sciRows(r.d&&r.d[K[0]]):[],data=[],sum=0,labs=[];
+    var head=["Producteur (nom et prénom)","ID prod","ID parcel","Strate / méthode","S (ha)","P prod","Gousse (g)"],dec=[null,null,null,null,2,0,1];
+    var AB={"Pieds de l’échantillon pris en compte":"Pied E","Balais moyens par pied":"Balai M/pied","Gousses moyennes par balai":"G M/balai","Nombre total de gousses":"T gousses","Gousses matures par pied productif":"G mature/P prod","Gousses nettes par pied":"G N/Pied"},DROP=["Densité","TNC","TCH – gousses tombées déduites","Production brute (après TNC)"];
+    rows.forEach(function(x){
+      x.ln=x.ln.filter(function(p){return DROP.indexOf(p[0])<0;}).map(function(p){return [AB[p[0]]||p[0],p[1]];});
+      x.ln.forEach(function(p){if(labs.indexOf(p[0])<0){labs.push(p[0]);}});
+    });
+    labs.forEach(function(l){head.push(l);dec.push("l");});
+    head.push("Poids (kg)");dec.push(1);
+    rows.forEach(function(x){
+      if(x.ok){sum+=x.kg;}
+      var row=[h.nom||"",h.code||"",x.code||("Parcelle "+x.parcelle),x.strate?("Strate "+x.strate+" · "+x.meth):(x.meth+" · exhaustif"),x.surface,x.pieds,x.poids];
+      labs.forEach(function(l){var v="";x.ln.forEach(function(p){if(p[0]===l){v=p[1];}});row.push(v);});
+      row.push(x.kg);data.push(row);
+    });
+    var total=head.map(function(_,i){return i===0?"Total":"";});total[head.length-1]=sum;
+    return {head:head,dec:dec,rows:data,sum:sum,total:total};
+  }
+  function cvs(v,d){return v==null||isNaN(v)?"":(d==null?String(v):Number(v).toFixed(d)).replace(".",",");}
+  function exportRec(r){
+    var t=recTable(r),L=[t.head.map(function(x){return '"'+x.replace(/"/g,'""')+'"';}).join(";")];
+    function lc(v){v=String(v==null?"":v).trim();if(v===""){return "";}var m=/^(-?\d[\d\s\u00a0\u202f]*(?:,\d+)?)\s*(g|kg|%)?$/.exec(v.replace(/^[−-]\s*/,"-"));
+      return m?m[1].replace(/[\s\u00a0\u202f]/g,""):'"'+v.replace(/"/g,'""')+'"';}
+    t.rows.forEach(function(row){L.push(row.map(function(v,i){var d=t.dec[i];return d==null?'"'+String(v).replace(/"/g,'""')+'"':(d==="l"?lc(v):cvs(v,d));}).join(";"));});
+    L.push(t.total.map(function(v,i){return i===t.total.length-1?cvs(v,1):'"'+v+'"';}).join(";"));
+    var f="Estimation_"+(r.label||"dossier").replace(/[^\w-]+/g,"_")+".csv";
+    out(f,"text/csv;charset=utf-8","\ufeff"+L.join("\r\n"));
+    $("homeMsg").textContent="Tableau exporté (ouvrable dans Excel) : "+f;
+  }
+  function renderHome(){
+    var C=$("homeTabs");if(!C){return;}C.innerHTML="";
+    recs().slice().reverse().forEach(function(r){
+      var outer=mk("div","card"),card=mk("div"),t=recTable(r);card.hidden=true;card.style.marginTop="10px";
+      var hh={};try{hh=JSON.parse((r.d&&r.d[K[1]])||"{}")||{};}catch(e){}
+      var rowb=mk("button","rec",[hh.nom,hh.code].filter(Boolean).join(" · ")||"Sans nom");rowb.type="button";
+      rowb.addEventListener("click",function(){card.hidden=!card.hidden;});
+      outer.appendChild(rowb);outer.appendChild(card);
+      var tw=mk("div","tw"),tb=mk("table","xt"),hr=mk("tr");
+      t.head.forEach(function(x){hr.appendChild(mk("th",null,x));});
+      var th=mk("thead");th.appendChild(hr);tb.appendChild(th);
+      var bd=mk("tbody");
+      function addRow(row,cls){var tr=mk("tr",cls);row.forEach(function(v,i){var d=t.dec[i],s=(d==null||d==="l")?String(v==null?"":v):(v==null||isNaN(v)?"":Number(v).toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}));tr.appendChild(mk("td",(d==null||d==="l")?null:"n",s));});bd.appendChild(tr);}
+      t.rows.forEach(function(row){addRow(row);});
+      if(t.rows.length){addRow(t.total,"sum");}
+      tb.appendChild(bd);tw.appendChild(tb);card.appendChild(tw);
+      if(!t.rows.length){card.appendChild(mk("p","sub","Aucune parcelle renseignée dans ce dossier."));}
+      var tl=mk("div","tools"),eb=mk("button",null,"Télécharger le tableau Excel");eb.type="button";
+      eb.addEventListener("click",function(){exportRec(r);});
+      tl.appendChild(eb);card.appendChild(tl);C.appendChild(outer);
+    });
+  }
+  var PK="sciblmd-pw",pwCb=null,pwMode="ask";
+  var LOCK='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+  function hashPw(p){var t="sciblmd|"+p,h1=0xdeadbeef,h2=0x41c6ce57;for(var i=0;i<t.length;i++){var c=t.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677);}
+    h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return String(4294967296*(2097151&h2)+(h1>>>0));}
+  function pwErr(t){$("pwE").textContent=t;$("pwE").hidden=false;}
+  function pwClose(){$("pwModal").hidden=true;pwCb=null;}
+  function pwOpen(mode,title,desc,cb){pwMode=mode;pwCb=cb;$("pwT").textContent=title;$("pwD").textContent=desc;$("pw1").value="";$("pw2").value="";$("pw2w").hidden=mode!=="new";$("pwE").hidden=true;$("pwModal").hidden=false;$("pw1").focus();}
+  function needPw(cb){if(!get(PK)){pwOpen("new","Crée un mot de passe","Il protège tous les dossiers enregistrés contre une modification par erreur. Garde-le bien : il ne peut pas être récupéré.",cb);}
+    else{pwOpen("ask","Mot de passe requis","Entre le mot de passe pour modifier ce dossier.",cb);}}
+  function ensurePw(cb){if(get(PK)){cb();}else{needPw(cb);}}
+  $("pwNo").addEventListener("click",pwClose);
+  $("pwOk").addEventListener("click",function(){var a=$("pw1").value;
+    if(pwMode==="new"){if(a.length<4){pwErr("4 caractères minimum.");return;}if(a!==$("pw2").value){pwErr("Les deux mots de passe sont différents.");return;}set(PK,hashPw(a));}
+    else if(hashPw(a)!==get(PK)){pwErr("Mot de passe incorrect.");return;}
+    var f=pwCb;pwClose();if(f){f();}});
+  ["pw1","pw2"].forEach(function(id){$(id).addEventListener("keydown",function(e){if(e.key==="Enter"){$("pwOk").click();}});});
+  function out(file,mime,text){
+    function fallback(){
+      try{var u=URL.createObjectURL(new Blob([text],{type:mime})),a=document.createElement("a");a.href=u;a.download=file;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},4000);}catch(e){}
+      var ta=$("bkTa");ta.value=text;$("bkOut").hidden=false;ta.onclick=function(){ta.select();};say("Fichier : "+file);}
+    try{var f=new File([text],file,{type:mime});
+      if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:file}).then(function(){say("Fichier partagé : "+file);},function(e){if(!e||e.name!=="AbortError"){fallback();}});return;}}catch(e){}
+    fallback();}
+  function fciHtml(){var p=document.querySelector("#fci .paper"),c=p.cloneNode(true),s=p.querySelectorAll("input,select"),d=c.querySelectorAll("input,select");
+    for(var i=0;i<d.length;i++){var v=document.createElement("span");v.textContent=s[i].value;v.style.cssText="display:block;min-height:1.2em;border-bottom:1px solid #999";d[i].parentNode.replaceChild(v,d[i]);}
+    return "<!doctype html><html lang=\"fr\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>FCI</title><style>"+document.querySelector("style").textContent+"</style></head><body><main><button class=\"noprint\" onclick=\"print()\">Imprimer</button><div id=\"fci\">"+c.outerHTML+"</div></main></body></html>";}
+  window.SCI={fresh:function(){keepCur();K.forEach(function(k){set(k,null);});set(AK,null);set(LK,null);set("sciblmd-goto","est");location.reload();},clear:function(){clear();set("sciblmd-goto","est");location.reload();},exportFci:function(){out("FCI_"+name().replace(/[^\w-]+/g,"_")+".html","text/html",fciHtml());}};
+  var T=$("bkTools");
+  function bt(txt,fn){var b=mk("button",null,txt);b.type="button";if(fn){b.addEventListener("click",fn);}T.appendChild(b);return b;}
+  bt("Enregistrer ce dossier",function(){ensurePw(function(){if(saveCur()){set("sciblmd-msg","Dossier enregistré : "+name());set("sciblmd-goto","home");K.forEach(function(k){set(k,null);});set(AK,null);set(LK,null);location.reload();}});});
+  function guard(e){
+    if(!locked){return;}
+    var t=e.target&&e.target.closest?e.target.closest("input,select,textarea,button"):null;
+    if(!t||!(t.closest("#estim")||t.closest("#fci"))||t.readOnly){return;}
+    if(t.tagName==="BUTTON"&&!(/\b(add|del|main|reset)\b/.test(t.className)||t.id==="pSimple"||t.id==="pStr")){return;}
+    if(t.closest(".noprint")&&t.closest("#fci")&&t.tagName==="BUTTON"&&!/\bdel\b/.test(t.className)){return;}
+    e.preventDefault();e.stopPropagation();
+    if(t.blur){t.blur();}
+    try{pad.animate([{transform:"translateX(0)"},{transform:"translateX(-4px)"},{transform:"translateX(4px)"},{transform:"translateX(0)"}],{duration:250});}catch(x){}
+  }
+  var PADL='<svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 10.5V7.5a4.5 4.5 0 0 1 9 0v3"/><rect x="4.5" y="10.5" width="15" height="10.5" rx="3" fill="currentColor" fill-opacity=".14"/><circle cx="12" cy="15" r="1.4" fill="currentColor" stroke="none"/><path d="M12 16v2.2"/></svg>';
+  var PADU='<svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 10.5V7.5a4.5 4.5 0 0 1 8.6-1.8"/><rect x="4.5" y="10.5" width="15" height="10.5" rx="3" fill="currentColor" fill-opacity=".14"/><circle cx="12" cy="15" r="1.4" fill="currentColor" stroke="none"/><path d="M12 16v2.2"/></svg>';
+  var pad=mk("button");pad.type="button";pad.id="mLock";
+  function padUp(){var has=!!get(AK);pad.innerHTML=locked?PADL:PADU;pad.hidden=!has;pad.className=locked?"":"open";
+    pad.title=!has?"Aucun dossier enregistré n’est ouvert":(locked?"Dossier verrouillé : appuie pour entrer le mot de passe":"Dossier déverrouillé : appuie pour verrouiller");
+    pad.setAttribute("aria-label",pad.title);}
+  pad.addEventListener("click",function(){
+    if(!get(AK)){return;}
+    if(locked){
+      if(!get(PK)){locked=false;set(LK,null);padUp();return;}
+      pwOpen("ask","Mot de passe requis","Ce dossier est déjà enregistré. Entre le mot de passe pour le modifier.",function(){locked=false;set(LK,null);padUp();});
+    }else{locked=true;set(LK,"1");padUp();}
+  });
+  document.body.appendChild(pad);padUp();
+  ["pointerdown","mousedown","click","focusin"].forEach(function(n){document.addEventListener(n,guard,true);});
+  if(!set("sciblmd-test","1")){say("Stockage indisponible : les données ne seront pas conservées.");}else{set("sciblmd-test",null);}
+  render();
+  if("serviceWorker" in navigator&&location.protocol.indexOf("http")===0){navigator.serviceWorker.register("sw.js").catch(function(){});}
+})();
+</script>
+<script>
+(function(){
+  var TK="sciblmd-theme-v1",T={mode:"auto",accent:"",text:"",fs:100,shape:"uniforme"};
+  try{var raw=localStorage.getItem(TK);if(raw){T=Object.assign(T,JSON.parse(raw));}}catch(e){}
+  if(T.frame===false&&T.shape==="uniforme"){T.shape="aucun";}
+  function $(i){return document.getElementById(i);}
+  function mk(t,c,x){var e=document.createElement(t);if(c){e.className=c;}if(x!=null){e.textContent=x;}return e;}
+  function save(){try{localStorage.setItem(TK,JSON.stringify(T));}catch(e){}}
+  function lum(h){var m=/^#?([0-9a-f]{6})$/i.exec(h||"");if(!m){return 0;}var n=parseInt(m[1],16),c=[n>>16&255,n>>8&255,n&255].map(function(v){v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4);});return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2];}
+  function apply(){
+    var el=document.documentElement,s=el.style;
+    if(T.mode==="auto"){el.removeAttribute("data-theme");}else{el.setAttribute("data-theme",T.mode);}
+    if(T.accent){s.setProperty("--accent",T.accent);s.setProperty("--on-accent",lum(T.accent)>0.5?"#111111":"#ffffff");s.setProperty("--soft","color-mix(in srgb, "+T.accent+" 16%, var(--card))");}
+    else{["--accent","--on-accent","--soft"].forEach(function(k){s.removeProperty(k);});}
+    if(T.text){s.setProperty("--text",T.text);s.setProperty("--muted","color-mix(in srgb, "+T.text+" 65%, var(--bg))");}
+    else{["--text","--muted"].forEach(function(k){s.removeProperty(k);});}
+    s.fontSize=Number(T.fs)===100?"":T.fs+"%";
+    el.classList.toggle("noframe",T.shape==="aucun");el.setAttribute("data-shape",T.shape);
+    var m=document.querySelector('meta[name="theme-color"]');if(m){m.setAttribute("content",T.accent||"#2f7d32");}
+  }
+  apply();
+  var ACC=["#2f7d32","#1b5e20","#43a047","#00897b","#00acc1","#0288d1","#1565c0","#3949ab","#5e35b1","#8e24aa","#d81b60","#e53935","#f4511e","#fb8c00","#f9a825","#6d4c41","#546e7a","#212121"];
+  var TXT=["#000000","#1d2a1d","#37474f","#1a237e","#4a148c","#880e4f","#b71c1c","#3e2723","#e6efe6","#ffffff"];
+  var modal=mk("div");modal.id="thModal";modal.className="noprint";modal.hidden=true;
+  modal.innerHTML='<div class="thbox" role="dialog" aria-modal="true" aria-labelledby="thT"><div class="head"><h2 id="thT">Paramètres</h2><button type="button" id="thX" aria-label="Fermer">✕</button></div>'
+   +'<p class="sec">Thème</p><div class="tabs" id="thMode"></div>'
+   +'<p class="sec">Couleur principale</p><div class="swg" id="thAcc"></div>'
+   +'<p class="sec">Couleur du texte</p><div class="swg" id="thTxt"></div>'
+   +'<p class="sec">Taille de police : <span id="thFsv"></span></p><input type="range" id="thFs" min="80" max="150" step="5" style="padding:0;border:none;background:transparent">'
+   +'<p class="sec">Cadrage</p><div class="tabs" id="thFr"></div>'
+   +'<button type="button" class="reset" id="thRs">Réinitialiser les paramètres</button></div>';
+  document.body.appendChild(modal);
+  function seg(id,items,cur,set){var c=$(id);c.innerHTML="";items.forEach(function(it){var b=mk("button","tab"+(cur()===it[0]?" on":""),it[1]);b.type="button";b.addEventListener("click",function(){set(it[0]);apply();save();paint();});c.appendChild(b);});}
+  function swatches(id,list,cur,set,autoLabel){
+    var c=$(id);c.innerHTML="";
+    if(autoLabel){var a=mk("button","tab"+(!cur()?" on":""),autoLabel);a.type="button";a.addEventListener("click",function(){set("");apply();save();paint();});c.appendChild(a);}
+    list.forEach(function(col){var b=mk("button","sw"+((cur()||(id==="thAcc"?"#2f7d32":"")).toLowerCase()===col?" on":""));b.type="button";b.style.background=col;b.setAttribute("aria-label",col);b.addEventListener("click",function(){set(col);apply();save();paint();});c.appendChild(b);});
+    var p=mk("input");p.type="color";p.value=/^#[0-9a-f]{6}$/i.test(cur())?cur():(id==="thAcc"?"#2f7d32":"#1d2a1d");p.title="Autre couleur";p.setAttribute("aria-label","Autre couleur");p.style.cssText="width:44px;height:34px;padding:2px";
+    p.addEventListener("input",function(){set(p.value);apply();save();});p.addEventListener("change",function(){paint();});
+    c.appendChild(p);
+  }
+  function paint(){
+    seg("thMode",[["auto","Auto"],["light","Clair"],["dark","Sombre"]],function(){return T.mode;},function(v){T.mode=v;});
+    swatches("thAcc",ACC,function(){return T.accent;},function(v){T.accent=v;});
+    swatches("thTxt",TXT,function(){return T.text;},function(v){T.text=v;},"Auto");
+    seg("thFr",[["uniforme","Uniforme"],["carre","Carré"],["ovale","Ovale"],["aucun","Sans cadres"]],function(){return T.shape;},function(v){T.shape=v;});
+    $("thFs").value=T.fs;$("thFsv").textContent=T.fs+" %";
+  }
+  $("thFs").addEventListener("input",function(){T.fs=Number($("thFs").value);$("thFsv").textContent=T.fs+" %";apply();save();});
+  $("thRs").addEventListener("click",function(){T={mode:"auto",accent:"",text:"",fs:100,shape:"uniforme"};apply();save();paint();});
+  function close(){modal.hidden=true;}
+  $("thX").addEventListener("click",close);
+  modal.addEventListener("click",function(e){if(e.target===modal){close();}});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!modal.hidden){close();}});
+  var mb=mk("button");mb.id="mMenu";mb.type="button";mb.title="Paramètres";mb.setAttribute("aria-label","Paramètres");
+  mb.innerHTML='<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="12" cy="19" r="1.9"/></svg>';
+  mb.addEventListener("click",function(){paint();modal.hidden=false;});
+  document.body.appendChild(mb);
+})();
+</script>
+</body>
+</html>
