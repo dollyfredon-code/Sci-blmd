@@ -13,12 +13,12 @@
 <style>
 :root{--bg:#f6f8f4;--card:#ffffff;--text:#1d2a1d;--muted:#5d6b5d;--accent:#2f7d32;--on-accent:#ffffff;--soft:#e3f1e3;--border:#cfd9cf;--danger:#b3261e;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a12;--card:#1c261c;--text:#e6efe6;--muted:#9db09d;--accent:#7bc67e;--on-accent:#10210f;--soft:#223a23;--border:#324532;--danger:#f2b8b5;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#121a12;--card:#1c261c;--text:#e6efe6;--muted:#9db09d;--accent:#7bc67e;--on-accent:#10210f;--soft:#223a23;--border:#324532;--danger:#f2b8b5;color-scheme:dark}
+:root[data-theme="dark"]{--bg:#000000;--card:#0c0c0c;--text:#f2f2f2;--muted:#a3a3a3;--accent:#7bc67e;--on-accent:#10210f;--soft:#161616;--border:#2b2b2b;--danger:#f2b8b5;color-scheme:dark}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none!important}
-body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.4}
-main{max-width:560px;margin:0 auto;padding:16px 16px 140px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--ff,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif);line-height:1.4}
+main{max-width:560px;margin:0 auto;padding:16px 16px 140px;position:relative;z-index:1}
 #nav{display:contents}
 #nav .nb{position:fixed;z-index:20;display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;padding:0;line-height:1;border-radius:50%;background:var(--card);border:1px solid var(--border);color:var(--muted);box-shadow:0 1px 4px rgba(0,0,0,.15)}
 #nav #mHome,#nav #mList,#nav #mFci{bottom:calc(16px + env(safe-area-inset-bottom,0px));width:auto;height:auto;padding:6px;border:none;border-radius:0;background:transparent;box-shadow:none;color:var(--text)}
@@ -27,26 +27,42 @@ main{max-width:560px;margin:0 auto;padding:16px 16px 140px}
 #nav #mList{left:50%;transform:translateX(-50%)}
 #nav #mHome.on,#nav #mList.on,#nav #mFci.on{color:var(--accent)}
 #nav .circ{right:16px;bottom:calc(80px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border:2px solid var(--accent);color:var(--accent)}
-#mMenu{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));right:8px;z-index:20;display:inline-flex;padding:6px;line-height:1;border:none;border-radius:0;background:transparent;box-shadow:none;color:var(--text)}
+#mBack{position:fixed;top:calc(6px + env(safe-area-inset-top,0px));left:8px;z-index:20;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0;line-height:1;border-radius:50%;background:var(--card);border:1.5px solid var(--accent);color:var(--accent);box-shadow:0 2px 6px rgba(0,0,0,.18);transition:transform .12s ease,background .12s ease,color .12s ease}
+#mBack:active{transform:scale(.9);background:var(--accent);color:var(--on-accent)}
+body[data-mode="est"] h1,body[data-mode="fci"] h1,body[data-mode="guide"] h1{padding-left:50px}
+#mBk{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));left:8px;z-index:20;display:inline-flex;padding:6px;line-height:1;border:none;border-radius:0;background:transparent;box-shadow:none;color:var(--text)}
+body[data-mode="home"] h1{padding-left:40px}
+#bkModal{position:fixed;inset:0;z-index:55;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}
 #thModal{position:fixed;inset:0;z-index:55;background:transparent;display:flex;align-items:center;justify-content:center;padding:16px}
 .thbox{background:transparent;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:var(--text);border:1px solid var(--border);border-radius:var(--rad,14px);padding:16px;width:100%;max-width:380px;max-height:88vh;overflow:auto}
 html[data-shape="carre"]{--rad:0px;--rad2:0px}
 html[data-shape="ovale"]{--rad:30px;--rad2:22px}
 .swg{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:8px}
 .sw{width:30px;height:30px;border-radius:50%;padding:0;border:2px solid var(--border)}
+.swt{display:inline-flex;gap:3px;align-items:center}
 .sw.on{outline:3px solid var(--text);outline-offset:2px}
 html.noframe .card:not(.result),html.noframe .paper{background:transparent;border-color:transparent}
-#mLock{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));right:46px;z-index:20;display:inline-flex;padding:6px;line-height:1;border:none;border-radius:0;background:transparent;box-shadow:none;color:var(--accent)}
+#mLock{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));right:8px;z-index:20;display:inline-flex;padding:6px;line-height:1;border:none;border-radius:0;background:transparent;box-shadow:none;color:var(--accent)}
 #mLock.open{color:var(--muted)}
 #mLock.off{opacity:.4}
 #nav .circ.on{background:var(--accent);color:var(--on-accent)}
+#nav #mBook{right:16px;bottom:calc(80px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border:2px solid var(--accent);color:var(--accent)}
+#nav #mBook.on{background:var(--accent);color:var(--on-accent)}
+.gtitle{font-size:1.25rem;margin:4px 0 0}
+.gh{font-size:.95rem;font-weight:700;color:var(--accent);margin:16px 0 4px}
+#guide p{margin:6px 0;font-size:.92rem}
+#guide ul,#guide ol{margin:4px 0 6px;padding-left:20px;font-size:.92rem}
+#guide li{margin:3px 0}
+.fm{background:var(--soft);border-left:3px solid var(--accent);border-radius:0 var(--rad2,10px) var(--rad2,10px) 0;padding:8px 10px;margin:6px 0;font-size:.88rem;overflow-wrap:anywhere}
+.fm b{display:block;font-size:.78rem;color:var(--muted);font-weight:600;margin-bottom:2px}
+.ex{color:var(--muted);font-size:.85rem}
 .rec{display:flex;align-items:center;gap:8px;width:100%;text-align:left;margin-top:8px}
 #pwModal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}
 .pwbox{background:var(--card);border:1px solid var(--border);border-radius:var(--rad,14px);padding:16px;width:100%;max-width:360px}
 h1{font-size:1.3rem;margin:0 0 14px;padding-right:96px}
 h2{font-size:1.05rem;margin:0}
 .sub{color:var(--muted);margin:0 0 14px;font-size:.9rem}
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--rad,14px);padding:14px;margin-top:10px}
+.card{background:color-mix(in srgb,var(--card) 88%,transparent);border:1px solid var(--border);border-radius:var(--rad,14px);padding:14px;margin-top:10px}
 label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:4px}
 .fld{margin-top:12px}
 input{width:100%;font:inherit;font-size:1rem;padding:10px;border:1px solid var(--border);border-radius:var(--rad2,10px);background:var(--bg);color:var(--text)}
@@ -114,19 +130,728 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
 #mode .ic{background:transparent;color:var(--text);display:inline-flex;border:none;border-bottom:3px solid transparent;border-radius:0;line-height:1;padding:4px 8px;opacity:.55}
 #mode .ic.on{background:transparent;color:var(--accent);border-bottom-color:var(--accent);opacity:1}
 @media print{@page{size:A4;margin:10mm}body *{visibility:hidden}#fci,#fci *{visibility:visible}#fci{position:absolute;left:0;top:0;width:100%}.noprint{display:none!important}.paper{background:#fff!important;color:#111!important;border:none;padding:0}.paper label,.fs,.foot{color:#444!important}.paper input,.paper select{background:#fff!important;color:#111!important;border:none;border-bottom:1px solid #000;border-radius:0;padding:1px 0;font-size:10px;-webkit-appearance:none;appearance:none}.fh>div{background:#fff!important;border:1px solid #333;border-radius:0}.bar,.th{background:#333!important;color:#fff!important;border-radius:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}.tg{border:1px solid #333;border-radius:0;min-width:0}.td{border-top:1px solid #999}.tw{overflow:visible}}
+body[data-mode]::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:var(--text);opacity:.36;-webkit-mask:url(fond-traits.png) center/cover no-repeat;mask:url(fond-traits.png) center/cover no-repeat}
+@media print{body[data-mode]::before{display:none}}
+.mrow{display:flex;align-items:center;gap:14px;width:100%;margin-top:8px;padding:13px 12px;text-align:left;font-size:1rem;background:transparent;border:1px solid var(--border);border-radius:var(--rad2,10px);color:var(--text)}
+.mrow svg{flex:0 0 auto;color:var(--accent)}
+.mrow span{flex:1}
+.mrow .chev{flex:0 0 auto;color:var(--muted)}
+.thback{margin-top:4px;background:transparent;border:none;padding:6px 0;color:var(--accent);font-weight:600}
+body[data-mode="list"] h1,body[data-mode="fiches"] h1{padding-left:40px}
+#bkModal,#thModal{align-items:flex-start;justify-content:flex-start;padding:calc(8px + env(safe-area-inset-top,0px)) 8px 8px 8px}
+#bkModal .pwbox{max-width:320px}
+#thModal .thbox{max-width:320px}
+#splash{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:24px;text-align:center;background:var(--bg);color:var(--accent);transition:opacity .5s ease}
+#splash.out{opacity:0;pointer-events:none}
+#splash .sp1,#splash .sp2{font-family:"Segoe Script","Brush Script MT","Dancing Script","Lucida Handwriting","Comic Sans MS",cursive;font-weight:400;line-height:1.15;color:var(--accent)}
+#splash .sp1{font-size:2.6rem}
+#splash .sp2{font-size:2.1rem}
+@media print{#splash{display:none!important}}
 </style>
 </head>
 <body>
+<div id="splash" class="noprint" aria-hidden="true"><div class="sp1">Data Collector</div><div class="sp2">SCI BLMD</div></div>
 <main>
   <h1>Data Collector SCI BLMD</h1>
   <div id="home"><div class="card"><h2>Accueil</h2><p class="sub" id="homeMsg" style="margin:6px 0 0">Appuie sur la balance pour voir les dossiers enregistrés, ou sur + pour créer un nouveau dossier.</p></div><div id="homeTabs"></div></div>
   <div id="list" hidden><div class="card"><h2>Dossiers enregistrés</h2><div id="bkList"></div></div></div>
   <div id="fiches" hidden><div class="card"><h2>Fiches d’enquête</h2><p class="sub" style="margin:6px 0 10px">Choisis un producteur pour continuer sa fiche d’enquête.</p><div id="fList"></div></div></div>
+  <div id="guide" hidden>
+    <h2 class="gtitle" id="gTitle">Guide de l’application et SCI</h2>
+    <div class="tabs" id="gNav" style="margin:10px 0 4px">
+      <button type="button" class="tab on" data-g="gApp">Guide de l’application</button>
+      <button type="button" class="tab" data-g="gUE">Règlement (UE) 2018/848</button>
+      <button type="button" class="tab" data-g="gUS">USDA NOP (7 CFR 205)</button>
+      <button type="button" class="tab" data-g="gInt">Intrants autorisés</button>
+      <button type="button" class="tab" data-g="g5M">Méthode 5M (risques)</button>
+      <button type="button" class="tab" data-g="gGrp">Intégrer un groupement</button>
+    </div>
+    <div class="gsec" id="gApp">
+
+    <div class="card">
+      <h2>1. Explication du fonctionnement</h2>
+
+      <p class="gh">Les boutons de l’écran</p>
+      <ul>
+        <li><b>Barre du bas</b> : la maison ouvre l’<b>Accueil</b>, la balance ouvre la liste des <b>dossiers enregistrés</b>, la feuille ouvre les <b>fiches d’enquête</b>.</li>
+        <li><b>Dans la liste des dossiers</b> (balance) : le bouton <b>+</b> crée un nouveau dossier, et le bouton <b>+</b> n’existe que là. Sur l’<b>Accueil</b>, le bouton rond avec un <b>livre</b>, en bas à droite, ouvre ce guide (il est aussi dans le menu). Pour quitter le guide, appuie de nouveau sur la balance.</li>
+        <li><b>Trois traits, en haut à gauche</b> : le menu. Il contient les <b>Paramètres</b> (Couleurs, Thème et taille de police, Cadrage), les <b>Sauvegardes</b> et le <b>Guide</b>.</li>
+        <li><b>Cadenas, en haut à droite</b> : il apparaît quand tu ouvres un dossier déjà enregistré. Il protège le dossier contre une modification par erreur.</li>
+      </ul>
+
+      <p class="gh">Créer un nouveau dossier</p>
+      <ol>
+        <li>Appuie sur la balance, puis sur <b>+</b>.</li>
+        <li>Écris le <b>nom et prénom</b> du producteur et son <b>ID prod</b>.</li>
+        <li>Appuie sur « Parcelle 1 » pour ouvrir la parcelle. <b>ID parcel</b> se remplit tout seul : ID prod, tiret, numéro de la parcelle (par exemple P12-01).</li>
+        <li>Pour une autre parcelle, appuie sur « + Ajouter une parcelle ».</li>
+      </ol>
+
+      <p class="gh">Choisir la méthode d’estimation</p>
+      <p>Le choix se fait <b>parcelle par parcelle</b>.</p>
+      <ul>
+        <li><b>Inventaire exhaustif</b> (méthode A) : pour une parcelle de <b>0,5 ha au maximum</b>.</li>
+        <li><b>Sondage stratifié</b> : pour <b>0,5 ha ou plus</b>. On découpe la parcelle en strates : <b>A</b> (100 P prod au maximum), <b>C densité moyenne</b> (de 100 à 300 P prod) et <b>C forte densité</b> (300 P prod ou plus). Les boutons « + A », « + C moy. » et « + C forte » ajoutent une strate.</li>
+        <li>Dès que tu saisis une donnée dans une méthode, l’autre est <b>bloquée</b>. Pour changer de méthode, efface d’abord toutes les données saisies dans la première.</li>
+      </ul>
+
+      <p class="gh">Saisir les données</p>
+      <ul>
+        <li><b>Méthode A</b> : S (ha), P prod, nombre total de pieds, puis un <b>échantillon d’au moins 5 P prod</b> (balais et gousses par balai de chaque pied), et Gousse (g).</li>
+        <li><b>Méthode C</b> : S (ha), Gousse (g), puis des <b>placettes de 16 m²</b> (balais et gousses par balai pour chacune). « + Ajouter une placette » en ajoute une. Saisis aussi P prod et le nombre total de pieds.</li>
+        <li><b>Gousse (g)</b> : entre 8 et 15.</li>
+        <li><b>TNC et TCH</b> : tu peux saisir le nombre de gousses ou directement le pourcentage. L’autre valeur se calcule toute seule.</li>
+        <li>Si une valeur sort des limites, un message rouge s’affiche sous les champs.</li>
+      </ul>
+
+      <p class="gh">Lire le résultat</p>
+      <ul>
+        <li>Le cadre vert en bas de la feuille donne les calculs et le <b>Poids (kg)</b>.</li>
+        <li>En sondage stratifié, le cadre « Total de la parcelle » additionne les strates complétées. Le total des <b>S (ha)</b> des strates doit faire au moins 0,5.</li>
+      </ul>
+
+      <p class="gh">Enregistrer un dossier</p>
+      <ol>
+        <li>Descends tout en bas et appuie sur <b>Enregistrer ce dossier</b>.</li>
+        <li>La première fois, crée un <b>mot de passe</b> (4 caractères au minimum). Garde-le bien : il ne peut pas être récupéré.</li>
+        <li>Après l’enregistrement, tu reviens à l’Accueil. Le dossier est dans la liste de la balance.</li>
+      </ol>
+
+      <p class="gh">Ouvrir et modifier un dossier enregistré</p>
+      <ol>
+        <li>Appuie sur la balance, touche le nom du dossier, puis <b>Ouvrir</b>. Tu peux le consulter sans mot de passe.</li>
+        <li>Pour le modifier, appuie sur le <b>cadenas</b> en haut à droite et entre le mot de passe. Le cadenas s’ouvre.</li>
+        <li>Appuie de nouveau sur le cadenas pour reverrouiller (sans mot de passe).</li>
+        <li>Après une modification, appuie sur <b>Enregistrer ce dossier</b> pour garder les changements. Le tableau de l’Accueil se met à jour à ce moment.</li>
+      </ol>
+      <p>Effacer un dossier demande aussi le mot de passe.</p>
+
+      <p class="gh">Accueil et tableau Excel</p>
+      <ul>
+        <li>L’Accueil liste les producteurs avec leur nom et leur code. Touche un nom pour voir son <b>tableau</b>.</li>
+        <li>Le tableau reprend uniquement les feuilles dont l’estimation de rendement est <b>complète</b>, avec une ligne « Total ».</li>
+        <li>Le bouton <b>Télécharger le tableau Excel</b> crée un fichier .csv que tu ouvres avec Excel ou que tu envoies par WhatsApp.</li>
+      </ul>
+
+      <p class="gh">Fiche d’enquête du producteur</p>
+      <ul>
+        <li>Appuie sur la feuille en bas à droite, puis choisis un producteur déjà estimé.</li>
+        <li>Son <b>nom</b> et son <b>code</b> sont déjà remplis. Complète le reste de la fiche.</li>
+        <li>Le bouton « Télécharger / imprimer (A4) » imprime la fiche, et « Exporter la fiche » crée un fichier.</li>
+      </ul>
+
+      <p class="gh">Utilisation sans Internet</p>
+      <ul>
+        <li>Après la première ouverture avec Internet, l’application marche <b>sans connexion</b>.</li>
+        <li>Les données restent <b>sur ce téléphone</b>. Si tu effaces les données de Chrome ou désinstalles l’application, elles sont perdues : télécharge régulièrement les tableaux.</li>
+        <li>Quand une mise à jour existe, elle arrive toute seule à l’ouverture suivante avec Internet. Le numéro de version est en bas de la fenêtre des paramètres.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>2. Explication des formules</h2>
+      <p class="sub" style="margin:6px 0 0">Dans les formules, chaque terme est écrit avec son abréviation, comme dans le tableau (liste en bas).</p>
+
+      <p class="gh">N dans S (ha)</p>
+      <p>Une placette fait 16 m², et 1 ha fait 10 000 m².</p>
+      <div class="fm"><b>Formule</b>N = S (ha) × 10 000 ÷ 16</div>
+      <p class="ex">Exemple : S (ha) = 1, donc N = 625.</p>
+
+      <p class="gh">Méthode C</p>
+      <div class="fm"><b>Balai M/PL</b>Balai M/PL = somme des balais ÷ PL E</div>
+      <div class="fm"><b>G M/balai</b>G M/balai = somme des gousses par balai ÷ PL E</div>
+      <div class="fm"><b>Pn moyen (poids moyen d’une placette, en g)</b>Pn = Balai M/PL × G M/balai × Gousse (g)</div>
+      <div class="fm"><b>Production (kg)</b>Pn × N ÷ 1000</div>
+      <div class="fm"><b>Total de balais et T gousses</b>Total de balais = Balai M/PL × N<br>T gousses = Balai M/PL × G M/balai × N</div>
+      <p class="ex">Exemple : Balai M/PL = 20, G M/balai = 7, Gousse (g) = 10, S (ha) = 1. Pn = 20 × 7 × 10 = 1 400 g. Production = 1 400 × 625 ÷ 1000 = 875 kg.</p>
+      <p>Seules les PL E où les balais et les gousses sont renseignés comptent.</p>
+
+      <p class="gh">Méthode A (inventaire exhaustif, strate A)</p>
+      <p>Les Pied E sont les pieds où les balais et les gousses par balai sont renseignés (5 au minimum).</p>
+      <div class="fm"><b>Balai M/pied</b>Balai M/pied = somme des balais ÷ Pied E</div>
+      <div class="fm"><b>G M/balai</b>G M/balai = somme des gousses par balai ÷ Pied E</div>
+      <div class="fm"><b>Total de balais</b>Balai M/pied × P prod</div>
+      <div class="fm"><b>T gousses</b>T gousses = [somme des (balais × gousses par balai) de chaque pied ÷ Pied E] × P prod</div>
+      <div class="fm"><b>Production (kg)</b>T gousses × Gousse (g) ÷ 1000</div>
+      <p class="ex">Exemple : 5 pieds donnent 48, 63, 80, 99 et 120 gousses, soit 82 en moyenne. Avec P prod = 80 : T gousses = 82 × 80 = 6 560, et Production = 6 560 × 10 ÷ 1000 = 65,6 kg.</p>
+
+      <p class="gh">G mature/P prod, G N/Pied et densité</p>
+      <div class="fm"><b>Formules</b>Densité = P prod ÷ S (ha)<br>G mature/P prod = T gousses ÷ P prod<br>G N/Pied = G mature/P prod × (1 − TNC ÷ 100)</div>
+      <div class="fm"><b>P prod sur pieds total (%)</b>(P prod ÷ nombre total de pieds) × 100</div>
+
+      <p class="gh">TNC et TCH</p>
+      <div class="fm"><b>TNC : gousses non commercialisables</b>TNC (%) = gousses non commercialisables ÷ T gousses × 100</div>
+      <div class="fm"><b>TCH : taux de chute nouaison</b>TCH (%) = gousses tombées ÷ T gousses × 100</div>
+      <p>Si tu saisis directement le pourcentage, il est utilisé tel quel. Les deux doivent être compris entre 0 et 100 %.</p>
+
+      <p class="gh">Poids (kg)</p>
+      <div class="fm"><b>Étapes</b>Production brute après TNC = Production × (1 − TNC ÷ 100)<br>Perte TCH = Production brute après TNC × TCH ÷ 100<br>Poids (kg) = Production brute après TNC − Perte TCH</div>
+      <p class="ex">Exemple : Production 875 kg, TNC 10 %, TCH 5 %. Production brute après TNC = 787,5 kg. Perte TCH = 39,4 kg. Poids (kg) = 748,1.</p>
+
+      <p class="gh">Total de la parcelle (sondage stratifié)</p>
+      <div class="fm"><b>Formules</b>Poids total = somme des Poids (kg) des strates complétées<br>S (ha) totale = somme des S (ha) des strates (0,5 au minimum)</div>
+
+      <p class="gh">Abréviations du tableau</p>
+      <ul>
+        <li><b>ID prod</b> : code producteur · <b>ID parcel</b> : code parcelle (code producteur − numéro)</li>
+        <li><b>S (ha)</b> : surface · <b>P prod</b> : pieds productifs · <b>Gousse (g)</b> : poids d’une gousse</li>
+        <li><b>Pied E</b> : pieds de l’échantillon pris en compte · <b>Balai M/pied</b> : balais moyens par pied</li>
+        <li><b>G M/balai</b> : gousses moyennes par balai · <b>T gousses</b> : nombre total de gousses</li>
+        <li><b>G mature/P prod</b> : gousses matures par pied productif · <b>G N/Pied</b> : gousses nettes par pied</li>
+        <li><b>PL E</b> : placettes échantillonnées · <b>Balai M/PL</b> : balais moyens par placette · <b>N</b> : nombre de placettes</li>
+        <li><b>Poids (kg)</b> : production nette estimée</li>
+      </ul>
+    </div>
+    </div>
+
+    <div class="gsec" id="gUE" hidden>
+      <div class="card">
+        <h2>Règlement (UE) 2018/848</h2>
+        <p class="sub" style="margin:6px 0 0">Production biologique et étiquetage des produits biologiques (Parlement européen et Conseil, 30 mai 2018).</p>
+        <p class="sub" style="margin:6px 0 0">Résumé de recherches faites sur les textes officiels et des fiches de certificateurs. Les textes officiels font foi : à valider avec ton organisme de certification.</p>
+
+        <p class="gh">Ce que c’est</p>
+        <ul>
+          <li>Texte de base de l’Union européenne sur le bio, applicable depuis le 1er janvier 2022.</li>
+          <li>Il fixe les principes et les règles de la production, de la certification, de l’étiquetage, de la publicité et des contrôles.</li>
+          <li>Il s’appuie sur une approche de risques : les procédés bio sont conçus avec une évaluation des risques et des mesures de précaution et de prévention.</li>
+        </ul>
+
+        <p class="gh">Les textes qui le complètent</p>
+        <ul>
+          <li><b>(UE) 2021/1165</b> : liste des produits et substances autorisés (intrants).</li>
+          <li><b>(UE) 2021/279</b> : contrôles, traçabilité et mesures pour garantir la conformité.</li>
+          <li><b>(UE) 2021/715</b> : exigences des groupes d’opérateurs (modifie l’article 36).</li>
+          <li><b>(UE) 2021/771</b> : contrôles des documents et contrôles des groupes d’opérateurs.</li>
+          <li><b>(UE) 2021/1698</b> : contrôles en pays tiers et reconnaissance des organismes de contrôle.</li>
+          <li><b>(UE) 2021/1378</b> : certificat des opérateurs, groupes et exportateurs de pays tiers.</li>
+          <li><b>(UE) 2021/2119</b> : certificat électronique (TRACES) et registres à conserver.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>UE : production végétale</h2>
+
+        <p class="gh">Période de conversion</p>
+        <ul>
+          <li>Cultures annuelles : 2 ans avant l’ensemencement.</li>
+          <li>Pâturages et fourrages pérennes : 2 ans.</li>
+          <li>Autres cultures pérennes : 3 ans avant la récolte. À confirmer avec ton organisme pour ta culture.</li>
+          <li>La conversion commence au plus tôt quand l’opérateur a notifié son activité à l’autorité ou à l’organisme de contrôle.</li>
+          <li>Dans des cas exceptionnels, une période passée peut être reconnue après coup. Cela demande des preuves et l’accord de l’organisme.</li>
+        </ul>
+
+        <p class="gh">Exploitation mixte (bio et non bio)</p>
+        <ul>
+          <li>Les exploitations mixtes sont autorisées, mais les unités bio et non bio doivent être clairement séparées.</li>
+          <li>Pour les cultures pérennes qui demandent au moins 3 ans, une production parallèle de variétés difficiles à distinguer est possible seulement sous <b>dérogation</b>, avec un plan de conversion à terminer en 5 ans au plus.</li>
+        </ul>
+
+        <p class="gh">Semences, plants et boutures</p>
+        <ul>
+          <li>Le matériel de reproduction bio est à privilégier.</li>
+          <li>Le matériel non bio n’est permis que sous conditions strictes.</li>
+          <li><b>Matériel traité (non autorisé) : aucune dérogation.</b> La parcelle qui l’utilise est déclassée et doit refaire une période de conversion.</li>
+        </ul>
+
+        <p class="gh">Sol, rotation et désherbage</p>
+        <ul>
+          <li>La fertilité se maintient par la rotation, les engrais verts, les légumineuses et les matières organiques. Les cultures pérennes sont une exception à l’obligation de rotation.</li>
+          <li>Tout produit à usage <b>herbicide</b> est interdit, y compris les substances de base comme le sel ou le vinaigre.</li>
+          <li>Les paillages oxodégradables (dits « fragmentables ») sont interdits.</li>
+          <li>Interdits aussi : rayonnements ionisants, culture hydroponique ou aéroponique, OGM.</li>
+        </ul>
+
+        <p class="gh">Mesures de précaution (article 28)</p>
+        <ul>
+          <li>L’opérateur prend des mesures pour éviter la présence de produits et substances non autorisés.</li>
+          <li>Il garde les preuves de ces mesures dans ses registres.</li>
+        </ul>
+        <p class="ex">Pour les intrants (insecticides, engrais), voir l’onglet « Intrants autorisés ».</p>
+      </div>
+
+      <div class="card">
+        <h2>UE : contrôle et certification</h2>
+        <ul>
+          <li>Chaque opérateur ou groupe reçoit un <b>certificat</b> d’une autorité ou d’un organisme de contrôle. Il est délivré sous forme électronique via TRACES depuis le 1er janvier 2023.</li>
+          <li>Les contrôles sur place comprennent la vérification de la <b>traçabilité</b> et de la <b>comptabilité matières</b> : les quantités achetées, produites et vendues doivent concorder.</li>
+          <li>L’opérateur conserve des registres qui prouvent sa conformité et fait les déclarations nécessaires aux contrôles.</li>
+          <li>Un manquement peut entraîner des mesures, y compris le retrait du certificat.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>UE : groupes de producteurs (article 36)</h2>
+        <p class="gh">Conditions pour constituer un groupe</p>
+        <ul>
+          <li>Seulement des membres agriculteurs (ou producteurs d’algues ou d’animaux d’aquaculture), qui peuvent aussi transformer ou commercialiser.</li>
+          <li>Une <b>personne morale</b> (le groupe a une existence légale), établie dans un État membre ou un pays tiers.</li>
+          <li>Des membres dont l’activité est <b>proche géographiquement</b>, dans le même pays.</li>
+          <li>Un <b>système de commercialisation commun</b> des produits.</li>
+          <li>Un <b>système de contrôles internes (SCI)</b> avec des procédures écrites et un responsable chargé de vérifier chaque membre.</li>
+          <li>Au plus <b>2 000 membres</b> par groupe.</li>
+        </ul>
+
+        <p class="gh">Qui peut être membre</p>
+        <p>L’une de ces deux conditions :</p>
+        <ul>
+          <li>le coût d’une certification individuelle dépasse 2 % du chiffre d’affaires ou de la production standard bio du membre, <b>et</b> son chiffre d’affaires bio ne dépasse pas 25 000 € par an (ou sa production standard bio 15 000 € par an) ;</li>
+          <li>ou son exploitation fait au plus 5 hectares (0,5 hectare en serre, 15 hectares pour les prairies permanentes seulement).</li>
+        </ul>
+
+        <p class="gh">Le SCI</p>
+        <ul>
+          <li>Procédures écrites sur : l’enregistrement des membres, les inspections internes (physiques et annuelles sur place), la formation, le contrôle des documents et registres, les manquements et leur suivi, la traçabilité interne.</li>
+          <li>Les inspecteurs internes sont compétents pour les produits et activités du groupe.</li>
+          <li>Le responsable du SCI vérifie que chaque membre est éligible et veille à ce qu’une <b>convention d’adhésion écrite et signée</b> existe entre le membre et le groupe. Le membre s’engage notamment à respecter le règlement.</li>
+        </ul>
+
+        <p class="gh">Contrôle par l’organisme de certification</p>
+        <ul>
+          <li>Il vérifie que les procédures du SCI sont écrites et conformes, que la liste des membres est à jour, que la traçabilité repose sur l’estimation des quantités et le recoupement des rendements, et que les membres sont formés.</li>
+          <li>Il réinspecte un échantillon de membres choisi selon les risques. Selon Certisys : au moins 5 % des membres par an, minimum 10.</li>
+        </ul>
+
+        <p class="gh">Attention : la responsabilité est collective</p>
+        <p>Si le SCI est défaillant, en particulier s’il ne détecte pas ou ne corrige pas le manquement d’un membre au point d’atteindre l’intégrité des produits bio, le certificat peut être <b>retiré à tout le groupe</b>.</p>
+      </div>
+
+      <div class="card">
+        <h2>UE : importations et suites</h2>
+        <ul>
+          <li>Depuis le 1er janvier 2025, le régime est celui de la <b>conformité</b> : ce sont les organismes de contrôle reconnus par l’UE qui inspectent et certifient.</li>
+          <li>L’opérateur, le groupe ou l’exportateur reçoit un certificat de cet organisme pour exporter vers l’UE.</li>
+          <li>Une proposition de la Commission (COM(2025) 780, décembre 2025) prévoit de modifier certaines règles, dont la composition des groupes. Elle est à suivre.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="gsec" id="gUS" hidden>
+      <div class="card">
+        <h2>USDA NOP (7 CFR 205)</h2>
+        <p class="sub" style="margin:6px 0 0">National Organic Program, programme bio des États-Unis (USDA, Agricultural Marketing Service). Texte : 7 CFR Part 205, adopté en application de l’Organic Foods Production Act de 1990.</p>
+        <p class="sub" style="margin:6px 0 0">Résumé de recherches faites sur les textes officiels et des fiches de certificateurs. Les textes officiels font foi : à valider avec ton organisme de certification.</p>
+
+        <p class="gh">Certification et exemptions</p>
+        <ul>
+          <li>La plupart des producteurs et transformateurs doivent être certifiés par un certificateur accrédité par l’USDA (§ 205.100).</li>
+          <li>Les producteurs qui vendent pour moins de 5 000 $ par an sont exemptés de certification (§ 205.101).</li>
+          <li>Les magasins de détail sont exemptés. Les transformateurs dont le produit contient moins de 70 % d’ingrédients bio le sont aussi.</li>
+          <li>Faire une fausse déclaration à l’USDA ou à un certificateur est une infraction fédérale : amendes et jusqu’à cinq ans de prison.</li>
+        </ul>
+
+        <p class="gh">Le plan de système biologique (§ 205.201)</p>
+        <ul>
+          <li>Tous les producteurs et transformateurs en ont un. Le certificateur l’examine, l’évalue et l’approuve.</li>
+          <li>Il décrit les pratiques et procédures, les substances utilisées, le suivi, les registres et les mesures contre le mélange et la contamination.</li>
+          <li>Le certificateur peut exiger des éléments supplémentaires.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>USDA : production végétale</h2>
+
+        <p class="gh">La terre (§ 205.202)</p>
+        <ul>
+          <li>Aucune substance interdite pendant les <b>trois ans</b> avant la récolte.</li>
+          <li>La parcelle a des <b>limites bien définies</b> et des <b>zones tampons</b> (par exemple des fossés de dérivation) contre la dérive ou le ruissellement venant de terres voisines non bio.</li>
+          <li>Le NOP ne fixe pas de largeur minimale : c’est à l’exploitant de déterminer une zone tampon suffisante, avec son certificateur.</li>
+          <li>Gestion conforme aux § 205.203 à 205.206.</li>
+        </ul>
+
+        <p class="gh">Sol et fertilisation (§ 205.203)</p>
+        <ul>
+          <li>Les pratiques maintiennent ou améliorent la matière organique, sans contaminer cultures, sol ou eau.</li>
+          <li>Fumier cru : seulement incorporé au sol au moins <b>120 jours</b> avant la récolte si la partie consommée touche le sol, et <b>90 jours</b> sinon. Sinon, il doit être composté.</li>
+          <li>Les boues d’épuration sont interdites.</li>
+          <li>Le rayonnement ionisant et le génie génétique sont interdits.</li>
+        </ul>
+
+        <p class="gh">Semences et plants (§ 205.204)</p>
+        <ul>
+          <li>Utiliser des semences, plants annuels et matériel de plantation <b>biologiques</b>.</li>
+          <li>Si une variété équivalente n’est pas disponible dans le commerce, des semences non bio mais <b>non traitées</b> peuvent être utilisées.</li>
+        </ul>
+
+        <p class="gh">Ravageurs, mauvaises herbes, maladies (§ 205.206)</p>
+        <ul>
+          <li>D’abord la prévention : rotation, assainissement, choix de variétés, etc.</li>
+          <li>Ensuite les moyens mécaniques ou physiques, les prédateurs et parasites introduits, les leurres, pièges et répulsifs non synthétiques.</li>
+          <li>Ensuite seulement les substances de la Liste nationale, quand ces mesures ne suffisent pas.</li>
+          <li>Voir l’onglet « Intrants autorisés ».</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>USDA : contrôle, registres, étiquetage</h2>
+        <ul>
+          <li><b>Inspection sur place</b> chaque année : elle vérifie que le plan reflète vraiment les pratiques de l’exploitation.</li>
+          <li><b>Registres</b> obligatoires : suivi des pratiques, barrières contre le mélange et la contamination, traçabilité jusqu’à la vente.</li>
+          <li>Étiquetage : « 100 % Organic », « Organic » (95 % ou plus d’ingrédients bio), « Made with Organic » (70 % ou plus).</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>USDA : groupes de producteurs</h2>
+        <p class="sub" style="margin:6px 0 0">Appelés « producer group operations » (PGO) dans le règlement.</p>
+        <ul>
+          <li>Un seul plan de système biologique pour toutes les unités du groupe, appliqué par un système de contrôle interne.</li>
+          <li>Les produits bio viennent seulement des membres du groupe, avec des terres et installations du groupe. Un membre ne peut pas vendre comme bio en dehors du groupe sans certification individuelle.</li>
+          <li>Rapport annuel au certificateur : nom et lieu des membres et des unités, produits, rendements estimés, surfaces.</li>
+          <li><b>Inspection interne de chaque membre au moins une fois par an</b>, en sa présence, avec un bilan matière et un rapprochement entre le rendement de chaque membre et les ventes du groupe.</li>
+          <li>Traçabilité de la production de chaque membre jusqu’à la vente et au transport.</li>
+          <li>Formation annuelle des membres et du personnel du SCI. Le personnel du SCI suit aussi une formation annuelle extérieure.</li>
+          <li>Les non-conformités sont signalées au certificateur, avec des sanctions pour les contrevenants.</li>
+          <li><b>Contrôle par le certificateur</b> : audits témoins des inspecteurs internes, et inspection individuelle d’au moins 1,4 fois la racine carrée du nombre de membres, ou 2 % si c’est plus. Tous les membres à risque élevé sont inspectés. Les nouveaux membres sont concernés.</li>
+          <li>Un groupe sans système de contrôle interne bien défini peut se voir refuser la certification.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="gsec" id="gInt" hidden>
+      <div class="card">
+        <h2>Intrants autorisés en bio</h2>
+        <p class="sub" style="margin:6px 0 0">Insecticides, traitements et engrais, selon le règlement d’exécution (UE) 2021/1165 et la Liste nationale de l’USDA NOP (7 CFR 205.601 et 205.602).</p>
+
+        <p class="gh">À lire avant tout</p>
+        <ul>
+          <li><b>Autorisé ne veut pas dire sans condition.</b> Beaucoup de substances ont des limites : culture, dose, moment, ou interdiction de contact avec la partie consommée.</li>
+          <li><b>Les listes changent.</b> Le règlement (UE) 2021/1165 a été modifié plusieurs fois (par exemple en 2023 et en 2025). Les résumés ci-dessous ne remplacent pas le texte à jour.</li>
+          <li><b>Ce sont des substances actives, pas des produits.</b> Un produit commercial contient aussi d’autres ingrédients (formulation) qui doivent être acceptables, et il peut exiger une homologation dans ton pays.</li>
+          <li><b>L’UE et l’USDA ne sont pas identiques.</b> Une substance acceptée par l’un peut être refusée par l’autre (voir la fin de cette page).</li>
+          <li><b>Avant d’acheter ou d’appliquer</b> : demande à ton organisme de certification si le produit est accepté, avec le nom commercial et la substance active. Garde la preuve (étiquette, facture, réponse écrite).</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>UE : règlement d’exécution (UE) 2021/1165</h2>
+        <p class="sub" style="margin:6px 0 0">Il complète le règlement (UE) 2018/848. Résumé d’après des fiches des chambres d’agriculture françaises (versions de 2022 et 2023), pas d’après le texte le plus récent.</p>
+
+        <p class="gh">Principe</p>
+        <ul>
+          <li>Seuls les produits et substances autorisés selon l’article 24 du règlement (UE) 2018/848 peuvent être utilisés.</li>
+          <li><b>La prévention d’abord</b> : prédateurs naturels, choix des espèces et variétés, rotation, techniques de culture, méthodes mécaniques et physiques.</li>
+          <li>Un produit autorisé ne s’emploie que si la prévention ne suffit pas, ou en cas de menace avérée pour la culture, et seulement dans la mesure du nécessaire.</li>
+          <li>Il faut tenir des <b>registres qui justifient</b> la nécessité d’utiliser le produit.</li>
+        </ul>
+
+        <p class="gh">Insecticides et répulsifs (annexe I)</p>
+        <ul>
+          <li><b>Azadirachtine</b> extraite du neem.</li>
+          <li><b>Spinosad.</b></li>
+          <li><b>Pyréthrines</b> : uniquement celles extraites de plantes.</li>
+          <li><b>Huiles essentielles</b> : citronnelle, girofle, colza, menthe verte, orange, arbre à thé. Toutes utilisations, sauf comme herbicide.</li>
+          <li><b>Acides gras</b> (savons) : toutes utilisations, sauf comme herbicide.</li>
+          <li><b>Huile de paraffine</b>, <b>kieselgur</b> (terre à diatomées), <b>kaolin</b>, <b>sable quartzeux</b>.</li>
+          <li><b>Phéromones</b> et substances semblables : seulement en pièges et distributeurs, en cas de menace avérée.</li>
+          <li><b>Terpènes</b> (eugénol, géraniol, thymol), <b>maltodextrine</b>, extrait d’ail, protéines hydrolysées (sauf gélatine).</li>
+          <li><b>Graisse de mouton</b> comme répulsif d’odeur. Les produits à base de farine de poisson ou de sang ne sont pas utilisables.</li>
+          <li><b>Pyréthroïdes de synthèse</b> : seulement deltaméthrine ou lambda-cyhalothrine, dans des pièges avec appâts contre deux mouches précises (olivier et méditerranéenne des fruits).</li>
+          <li><b>Micro-organismes</b> : ceux énumérés au règlement 540/2011, à condition de ne pas provenir d’OGM.</li>
+        </ul>
+
+        <p class="gh">Maladies et autres traitements</p>
+        <ul>
+          <li><b>Soufre</b>, <b>polysulfure de calcium</b>, <b>bicarbonate de potassium</b>.</li>
+          <li><b>Cuivre</b> (hydroxyde, oxychlorure, sulfate tribasique, oxyde cuivreux, bouillie bordelaise) : au maximum 28 kg de cuivre par hectare sur 7 ans.</li>
+          <li><b>Phosphate ferrique</b> : contre les limaces (molluscicide).</li>
+          <li><b>Laminarine</b> : issue d’algues bio ou récoltées durablement.</li>
+          <li><b>Substances de base</b> (prêle, ortie, vinaigre, bicarbonate de sodium, lait, lécithines, bière, etc.) : sans autorisation de mise sur le marché, mais jamais comme herbicides.</li>
+        </ul>
+
+        <p class="gh">Points qui piègent</p>
+        <ul>
+          <li>Une substance qui n’est pas d’origine végétale, algale, animale, microbienne ou minérale, et pas identique à sa forme naturelle, ne doit pas toucher les parties comestibles de la plante.</li>
+          <li>Les engrais foliaires et oligo-éléments ne doivent pas servir de fongicide ou de bactéricide.</li>
+          <li>Les adjuvants ne sont acceptés que s’ils ont une autorisation de mise sur le marché et accompagnent un produit à substance listée. Ceux pour herbicide ou régulateur de croissance sont interdits.</li>
+          <li>Aucun rodenticide n’est listé pour le champ : pas de lutte chimique contre les rongeurs en culture. Pièges et prédateurs sont permis.</li>
+          <li>Dans plusieurs pays, le produit doit aussi être homologué pour la culture et l’usage visés. À vérifier auprès des autorités de ton pays.</li>
+        </ul>
+
+        <p class="gh">Engrais et amendements du sol (annexe II)</p>
+        <p>D’abord les moyens naturels : rotation avec légumineuses, engrais verts, matières organiques de préférence compostées issues du bio. Ensuite seulement la liste.</p>
+        <ul>
+          <li><b>Autorisés</b> : fumiers et composts, lisier après fermentation ou dilution, lombricompost, guano, mélanges de végétaux compostés, sciures et copeaux de bois non traités, écorces compostées, cendres de bois, algues et produits d’algues.</li>
+          <li><b>Produits d’origine animale</b> : farines de sang, d’os, de corne, de plumes, de poisson et de viande, laine, poils, produits laitiers, protéines hydrolysées. Ils suivent les règles sanitaires sur les sous-produits animaux.</li>
+          <li><b>Minéraux</b> : phosphate naturel tendre, carbonate de calcium, gypse, sulfate de potassium, sel brut de potasse, sulfate de magnésium (kiesérite), soufre élémentaire, poudres de roche et argiles, oligo-éléments inorganiques.</li>
+          <li><b>Autres</b> : vinasse (hors vinasses ammoniacales), chitine, biochar d’origine végétale, léonardite, acides humiques et fulviques d’origine inorganique.</li>
+        </ul>
+        <p><b>Interdits ou limités :</b></p>
+        <ul>
+          <li>effluents d’élevages industriels (cages, caillebotis, grilles) au-dessus de certains seuils ;</li>
+          <li>boues d’industries agroalimentaires ;</li>
+          <li>chaux vive ;</li>
+          <li>silicium issu de silicate de sodium, de potassium ou d’acide silicique, comme fertilisant ;</li>
+          <li>digestats de méthanisation et protéines hydrolysées animales : jamais sur les parties comestibles de la plante ;</li>
+          <li>tourbe : limitée à l’horticulture (maraîchage, floriculture, arboriculture, pépinière).</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>USDA NOP : Liste nationale (7 CFR 205)</h2>
+        <p class="sub" style="margin:6px 0 0">Résumé d’après le texte du § 205.601 (substances de synthèse autorisées en culture) et des documents de l’USDA sur le § 205.602.</p>
+
+        <p class="gh">Principe</p>
+        <ul>
+          <li>Les substances <b>naturelles</b> (non synthétiques) sont permises, sauf celles de la liste des interdites (§ 205.602).</li>
+          <li>Les substances <b>de synthèse</b> sont interdites, sauf celles de la liste des autorisées (§ 205.601), avec leurs restrictions.</li>
+          <li>Leur usage ne doit pas contaminer les cultures, le sol ou l’eau.</li>
+          <li>Les pratiques de prévention du § 205.206 passent d’abord. Une substance de la liste ne s’emploie que si elles ne suffisent pas (sauf quelques exceptions).</li>
+        </ul>
+
+        <p class="gh">Insecticides et acaricides (§ 205.601 e)</p>
+        <ul>
+          <li><b>Soufre élémentaire</b> et <b>soufre calcique</b> (polysulfure de calcium).</li>
+          <li><b>Huiles horticoles</b> : huiles à gamme étroite (dormantes, suffocantes, d’été).</li>
+          <li><b>Savons insecticides</b>, <b>pièges et barrières collants</b>.</li>
+          <li><b>Esters d’octanoate de saccharose</b> : selon l’étiquette approuvée.</li>
+          <li><b>Carbonate d’ammonium</b> : seulement comme appât dans des pièges, sans contact avec la culture ni le sol.</li>
+          <li><b>Silicate de potassium aqueux</b> : la silice doit venir de sable naturel.</li>
+          <li><b>Acide borique</b> : seulement pour lutter contre les ravageurs des bâtiments, sans contact avec les aliments bio.</li>
+          <li><b>Phéromones</b> : autorisées pour la gestion des insectes.</li>
+        </ul>
+
+        <p class="gh">Maladies des cultures (§ 205.601 i)</p>
+        <ul>
+          <li><b>Cuivre fixé</b> (hydroxyde, oxyde, oxychlorure) : doit être utilisé de façon à limiter l’accumulation dans le sol. Jamais comme herbicide.</li>
+          <li><b>Sulfate de cuivre</b> : même règle d’accumulation.</li>
+          <li><b>Chaux hydratée</b>, <b>chaux soufrée</b>, <b>soufre</b>, <b>bicarbonate de potassium</b>, <b>peroxyde d’hydrogène</b>, <b>huiles horticoles</b>, <b>sel de zinc de la polyoxine D</b>.</li>
+          <li><b>Acide peracétique</b> : pour la brûlure bactérienne, à 6 % au plus dans les formulations d’eau oxygénée.</li>
+        </ul>
+
+        <p class="gh">Autres usages listés</p>
+        <ul>
+          <li><b>Limaces et escargots</b> : phosphate ferrique, soufre.</li>
+          <li><b>Rongeurs</b> : vitamine D3.</li>
+          <li><b>Désinfection</b> : alcools, chlore (limites d’eau potable), acide peracétique, peroxyde d’hydrogène, ozone pour nettoyer l’irrigation.</li>
+          <li><b>Paillage</b> : papier sans encre brillante ou colorée, plastique à base de pétrole (sauf PVC), film biodégradable d’origine biologique sans OGM.</li>
+        </ul>
+
+        <p class="gh">Amendements du sol et engrais de synthèse autorisés (§ 205.601 j)</p>
+        <ul>
+          <li><b>Oligo-éléments</b> : seulement si la carence est documentée par une analyse du sol ou des tissus ou une méthode approuvée par le certificateur. Pas ceux faits de nitrates ou de chlorures. Jamais comme défoliant, herbicide ou dessiccant.</li>
+          <li><b>Sulfate de magnésium</b> : avec une carence documentée dans le sol.</li>
+          <li><b>Soufre élémentaire</b>, <b>acides humiques</b> (dépôts naturels, extraits à l’eau ou à l’alcali), <b>produits liquides de poisson</b>, <b>sous-produits de calmar</b>, <b>extraits de plantes aquatiques</b>, vitamines C et E.</li>
+        </ul>
+
+        <p class="gh">Naturelles interdites (§ 205.602)</p>
+        <ul>
+          <li>Cendres de combustion de fumier, arsenic, sels de plomb, strychnine, poussière de tabac (sulfate de nicotine), roténone.</li>
+          <li>Le glyphosate n’est jamais autorisé.</li>
+        </ul>
+        <p class="ex">Je n’ai pas vérifié ici toute la liste des substances interdites du § 205.602 : consulte le texte officiel.</p>
+      </div>
+
+      <div class="card">
+        <h2>Pièges à éviter : UE ou USDA</h2>
+        <ul>
+          <li>Le <b>silicate de potassium</b> est permis par l’USDA comme insecticide et contre les maladies, alors que le silicium issu de silicates est interdit dans l’UE comme fertilisant.</li>
+          <li>Le <b>cuivre</b> est limité dans les deux, mais pas de la même façon : 28 kg/ha sur 7 ans dans l’UE, et « limiter l’accumulation dans le sol » pour l’USDA.</li>
+          <li>La <b>vitamine D3</b> comme rodenticide est listée par l’USDA. L’UE ne liste aucun rodenticide pour le champ.</li>
+          <li>L’UE est une <b>liste positive</b> : ce qui n’est pas listé est interdit. L’USDA autorise les substances naturelles par défaut.</li>
+          <li>Si tu vends vers les deux marchés, respecte la règle la plus stricte pour chaque produit.</li>
+        </ul>
+        <p class="ex">Rappel : demande toujours confirmation écrite à ton organisme de certification avant d’utiliser un produit.</p>
+      </div>
+    </div>
+
+    <div class="gsec" id="g5M" hidden>
+      <div class="card">
+        <h2>Méthode 5M : risques d’une parcelle</h2>
+        <p class="sub" style="margin:6px 0 0">Le 5M n’est pas un règlement : c’est une méthode d’analyse des risques. Elle aide à répondre à l’exigence de précaution contre les contaminations (règlement (UE) 2018/848, article 28).</p>
+
+        <p class="gh">Le principe</p>
+        <ul>
+          <li>Cinq axes : <b>Milieu, Matières, Matériel, Main-d’œuvre, Méthode</b>.</li>
+          <li>On repère les risques sur chaque axe, puis on note la <b>gravité</b> et la <b>probabilité</b> de 1 (faible) à 4 (élevé).</li>
+          <li>On décide des mesures à prendre, avec un responsable et une date.</li>
+        </ul>
+
+        <p class="gh">Les étapes, dans l’ordre</p>
+        <ol>
+          <li><b>Décrire la parcelle</b> : code, superficie, localisation, croquis avec les voisins et les points d’eau.</li>
+          <li><b>Parcourir les 5 axes</b> et lister tout ce qui pourrait amener une substance ou un produit non autorisé en bio, ou mélanger des lots bio et non bio.</li>
+          <li><b>Noter chaque risque</b> : gravité (G) et probabilité (P), de 1 à 4.</li>
+          <li><b>Calculer la criticité</b> et classer les risques.</li>
+          <li><b>Décider des mesures</b>, avec un responsable et une date.</li>
+          <li><b>Contrôler et réviser</b> : vérifier que les mesures sont faites, puis refaire l’analyse au moins une fois par an.</li>
+        </ol>
+
+        <p class="gh">Comment noter</p>
+        <p class="ex">Grille de travail, à adapter avec ton organisme de certification.</p>
+        <div class="fm"><b>Gravité (G)</b>
+          1 : effet très limité, sans conséquence sur le produit<br>
+          2 : traces possibles, facile à corriger<br>
+          3 : lot ou parcelle déclassé<br>
+          4 : perte de la certification ou du marché bio
+        </div>
+        <div class="fm"><b>Probabilité (P)</b>
+          1 : très improbable<br>
+          2 : possible, ça pourrait arriver<br>
+          3 : probable, déjà arrivé ou ça se voit autour de la parcelle<br>
+          4 : quasi certain, c’est déjà en cours
+        </div>
+        <div class="fm"><b>Criticité = G × P</b>
+          1 à 4 : risque faible, surveiller<br>
+          5 à 8 : risque moyen, mesure à prévoir<br>
+          9 à 16 : risque élevé, mesure immédiate
+        </div>
+
+        <p class="gh">Adaptation à une parcelle bio</p>
+        <p class="ex">Proposition de travail, à adapter avec ton organisme de certification.</p>
+        <ul>
+          <li><b>Milieu</b> : parcelles voisines conventionnelles, eau, pente et ruissellement, route.</li>
+          <li><b>Matières</b> : engrais, produits de traitement, boutures ou tuteurs utilisés.</li>
+          <li><b>Matériel</b> : outils et pulvérisateurs partagés avec des parcelles non bio.</li>
+          <li><b>Main-d’œuvre</b> : formation et connaissance des règles bio.</li>
+          <li><b>Méthode</b> : pratiques de culture, de séchage et de stockage, séparation des lots.</li>
+        </ul>
+
+        <p class="gh">Questions à se poser sur chaque axe</p>
+        <p><b>Milieu</b></p>
+        <ul>
+          <li>Qui cultive autour de la parcelle, et avec quels traitements ?</li>
+          <li>La parcelle est-elle en pente, sous une parcelle traitée ? L’eau de pluie ou d’irrigation vient-elle d’ailleurs ?</li>
+          <li>Y a-t-il une haie, une bande ou une distance qui protège la limite ?</li>
+          <li>Route, village, brûlis ou déchets à proximité ?</li>
+        </ul>
+        <p><b>Matières</b></p>
+        <ul>
+          <li>Tous les intrants sont-ils dans la liste des intrants autorisés ? Où est la preuve (facture, étiquette) ?</li>
+          <li>Les boutures, plants, tuteurs et paillis viennent-ils d’une source bio ou propre ?</li>
+          <li>Compost et fumier : d’où viennent-ils ?</li>
+          <li>Les produits sont-ils stockés loin de tout produit interdit ?</li>
+        </ul>
+        <p><b>Matériel</b></p>
+        <ul>
+          <li>Pulvérisateur, outils, sacs, paniers, claies : servent-ils aussi hors bio ?</li>
+          <li>Si oui, y a-t-il un nettoyage et une trace de ce nettoyage ?</li>
+          <li>Le matériel de séchage et de stockage est-il propre et réservé ?</li>
+        </ul>
+        <p><b>Main-d’œuvre</b></p>
+        <ul>
+          <li>Les personnes qui travaillent sur la parcelle connaissent-elles les règles bio ?</li>
+          <li>Travaillent-elles aussi sur des parcelles conventionnelles ? Dans quel ordre passent-elles ?</li>
+          <li>Qui est responsable de la parcelle ? Y a-t-il une trace des consignes données ?</li>
+        </ul>
+        <p><b>Méthode</b></p>
+        <ul>
+          <li>Les opérations (pollinisation, récolte, ébouillantage, séchage, conditionnement) sont-elles faites de façon à éviter tout mélange ?</li>
+          <li>Les lots bio sont-ils étiquetés, pesés et séparés à chaque étape ?</li>
+          <li>Les transports et le stockage évitent-ils le contact avec du non bio ?</li>
+          <li>Les enregistrements sont-ils tenus à jour (cahier de parcelle, récoltes, ventes) ?</li>
+        </ul>
+
+        <p class="gh">Exemple chiffré</p>
+        <div class="fm"><b>Risque</b>
+          Une parcelle voisine est traitée avec un herbicide, et la pente envoie le ruissellement vers ma parcelle.<br>
+          G = 3 (lot déclassé), P = 3 (probable) → criticité 9, risque élevé.<br>
+          <b>Mesures</b> : bande tampon plantée, fossé de dérivation, information du voisin, analyse en cas de doute. Responsable et date à noter.
+        </div>
+
+        <p class="gh">Mesures types</p>
+        <ul>
+          <li><b>Prévention</b> : bande tampon, haie, fossé, séparation du matériel, local de stockage réservé.</li>
+          <li><b>Organisation</b> : parcelle bio travaillée en premier, consignes écrites, formation des travailleurs.</li>
+          <li><b>Nettoyage</b> : procédure simple de nettoyage du matériel partagé, avec date et nom de la personne.</li>
+          <li><b>Traçabilité</b> : étiquette de lot, cahier de récolte et de séchage, factures conservées.</li>
+          <li><b>Contrôle</b> : vérification régulière sur le terrain, et analyse si un doute sérieux apparaît.</li>
+        </ul>
+
+        <p class="gh">À enregistrer par parcelle</p>
+        <ul>
+          <li>Code, superficie, localisation ou croquis.</li>
+          <li>Historique de trois ans : cultures et intrants.</li>
+          <li>Risques repérés, notes de gravité et de probabilité, mesures prises.</li>
+          <li>Responsable, date de la mesure, date de vérification.</li>
+        </ul>
+
+        <p class="gh">Quand refaire l’analyse</p>
+        <ul>
+          <li>Au moins une fois par an, avant la saison.</li>
+          <li>Dès qu’un voisin change de pratique, qu’un nouvel intrant ou un nouveau matériel arrive, ou qu’un incident a lieu.</li>
+          <li>Après une remarque de l’organisme de certification.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="gsec" id="gGrp" hidden>
+      <div class="card">
+        <h2>Intégrer un groupement bio certifié</h2>
+        <p class="sub" style="margin:6px 0 0">Il n’existe pas de liste officielle unique : chaque groupement et chaque organisme de certification a ses formulaires. Voici ce que montrent les règles et les certificateurs, dans l’ordre des étapes.</p>
+        <p class="sub" style="margin:6px 0 0">Résumé de recherches faites sur les textes officiels et des fiches de certificateurs. Les textes officiels font foi : à valider avec ton organisme de certification.</p>
+      </div>
+
+      <div class="card">
+        <h2>Étape 1 · Vérifier que tu peux entrer</h2>
+        <p class="gh">UE (règlement 2018/848, article 36)</p>
+        <ul>
+          <li>Tu es agriculteur, dans le même pays que le groupe et près des autres membres.</li>
+          <li>Soit : le coût d’une certification individuelle dépasse 2 % de ton chiffre d’affaires bio, et celui-ci est au plus 25 000 € par an (ou ta production standard bio au plus 15 000 €).</li>
+          <li>Soit : ton exploitation fait au plus 5 hectares (0,5 hectare en serre).</li>
+          <li>Le groupe a au plus 2 000 membres, une personnalité juridique, un système de vente commun et un SCI.</li>
+        </ul>
+        <p class="gh">USDA NOP</p>
+        <ul>
+          <li>Tu acceptes un seul plan de système biologique commun et tu ne vends pas comme bio hors du groupe.</li>
+        </ul>
+        <p class="gh">Pour les deux</p>
+        <ul>
+          <li>Les parcelles respectent la période sans produit interdit : 2 à 3 ans pour l’UE selon la culture, 3 ans pour l’USDA. Sinon, tu entres en conversion.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Étape 2 · Documents à préparer</h2>
+        <p class="ex">Synthèse de travail d’après les règles et des formulaires de certificateurs. À valider avec ton organisme.</p>
+        <ol>
+          <li><b>Fiche d’identité</b> du producteur : nom, code, village ou localité, contact.</li>
+          <li><b>Convention d’adhésion écrite et signée</b> entre toi et le groupe. Tu t’engages notamment à respecter le règlement. (Exigence UE ; l’USDA parle d’accord contractuel avec chaque membre.)</li>
+          <li><b>Liste et plan des parcelles</b> : code, superficie, localisation (adresse ou coordonnées GPS), croquis avec les limites et les voisins.</li>
+          <li><b>Historique de trois ans par parcelle</b> : cultures, intrants utilisés, ou attestation écrite d’un tiers. Date du dernier produit interdit appliqué.</li>
+          <li><b>Cultures non bio</b> que tu fais : liste et surfaces, et activité parallèle éventuelle.</li>
+          <li><b>Analyse des risques</b> de contamination par parcelle (méthode 5M) : voisins conventionnels, eau, matériel partagé.</li>
+          <li><b>Estimation de production</b> : produits, surfaces, rendements estimés. Elle sert à la traçabilité et au rapprochement avec les ventes.</li>
+          <li><b>Intrants</b> que tu comptes utiliser ou que tu as utilisés (nom commercial et substance active).</li>
+          <li><b>Stockage et transformation</b> chez toi : lieux, séparation des lots bio et non bio.</li>
+          <li><b>Formation</b> : participation à la formation du groupe sur les règles et le SCI.</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h2>Étape 3 · Ce que fait le groupement</h2>
+        <ul>
+          <li>Il t’<b>enregistre</b> sur la liste des membres, qu’il tient à jour et communique au certificateur.</li>
+          <li>Il vérifie ton éligibilité et vérifie que ta convention est signée.</li>
+          <li>Il fait une <b>inspection interne physique sur place</b> chez toi au moins une fois par an. Pour l’USDA, tu dois être présent et l’inspection comprend un bilan matière.</li>
+          <li>Il te <b>forme</b> chaque année, et garde un registre des formations.</li>
+          <li>Il rapproche tes <b>rendements estimés</b> de tes livraisons, pour la traçabilité.</li>
+          <li>Il signale les manquements au certificateur et suit les corrections.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Étape 4 · Ce qui peut se passer ensuite</h2>
+        <ul>
+          <li>Le certificateur peut <b>réinspecter ton exploitation</b> dans l’échantillon qu’il choisit. UE : échantillon selon les risques (selon Certisys, au moins 5 % des membres par an, minimum 10). USDA : au moins 1,4 fois la racine carrée du nombre de membres ou 2 %, tous les membres à risque et les nouveaux membres.</li>
+          <li>Tu tiens tes <b>registres</b> : culture, intrants, récolte, stockage, vente.</li>
+          <li>Tu notifies tout <b>changement</b> de parcelle, de culture ou d’intrant au groupement.</li>
+        </ul>
+
+        <p class="gh">Ce qui est en jeu</p>
+        <ul>
+          <li><b>UE :</b> si le SCI ne détecte pas ou ne corrige pas les manquements d’un membre, le certificat peut être retiré à tout le groupe. Ton erreur peut donc toucher les autres.</li>
+          <li><b>USDA :</b> tu ne peux pas vendre comme bio en dehors du groupe sans certification individuelle.</li>
+          <li><b>Pour les deux :</b> ne mélange jamais les lots bio et non bio, et n’utilise aucun produit sans confirmation de l’organisme de certification.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
   <div id="estim" hidden>
     <div class="card">
       <h2>Producteur</h2>
       <div class="fld"><label for="hNom">Nom et prénom du producteur</label><input id="hNom" autocomplete="off"></div>
-      <div class="fld"><label for="hCode">Code producteur</label><input id="hCode" autocomplete="off"></div>
+      <div class="fld"><label for="hCode">ID prod</label><input id="hCode" autocomplete="off"></div>
     </div>
   <h2 style="margin:16px 0 0">Estimation du rendement de vanille verte</h2>
   <div class="tabs" id="plist" style="margin-top:12px"></div>
@@ -155,9 +880,13 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
 <nav id="nav" class="noprint" aria-label="Navigation">
     <button type="button" class="nb on" id="mHome" aria-label="Accueil" title="Accueil"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/></svg></button>
     <button type="button" class="nb" id="mList" aria-label="Dossiers enregistrés" title="Dossiers enregistrés"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16"/><path d="M7 20h10"/><path d="M5 7h14"/><path d="M5 7 2.5 13.5a2.5 2.5 0 0 0 5 0z"/><path d="M19 7l-2.5 6.5a2.5 2.5 0 0 0 5 0z"/></svg></button>
+    <button type="button" class="nb" id="mBook" aria-label="Guide de l’application" title="Guide de l’application"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.5 5 8 4.5 4 4.5v13c4 0 6.5.5 8 2 1.5-1.5 4-2 8-2v-13c-4 0-6.5.5-8 2z"/><path d="M12 6.5v13"/></svg></button>
     <button type="button" class="nb circ" id="mEst" aria-label="Nouveau dossier" title="Nouveau dossier"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button>
     <button type="button" class="nb" id="mFci" aria-label="Fiche d’enquête du producteur" title="Fiche d’enquête du producteur"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h8l4 4v12H6z"/><path d="M14 4v4h4"/><path d="M9 11.5h6"/><path d="M9 15.5h6"/></svg></button>
 </nav>
+<button type="button" id="mBack" class="noprint" aria-label="Retour" title="Retour" hidden><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H5"/><path d="M11 5.5 4.5 12 11 18.5"/></svg></button>
+<button type="button" id="mBk" class="noprint" aria-label="Sauvegarde" title="Sauvegarde" hidden><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="6.5" r="2.8"/><circle cx="6.2" cy="17" r="2.8"/><circle cx="17.8" cy="17" r="2.8"/></svg></button>
+<div id="bkModal" class="noprint" hidden><div class="pwbox" role="dialog" aria-modal="true" aria-labelledby="bkT" style="max-height:88vh;overflow:auto"><div class="head"><h2 id="bkT">Menu</h2><button type="button" id="bkX" aria-label="Fermer">✕</button></div><button type="button" class="mrow" id="mnSet"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Paramètres</span><svg class="chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button><button type="button" class="mrow" id="mnBk"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4"/><path d="M8 20v-6h8v6"/></svg><span>Sauvegardes</span><svg class="chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button><div id="mnBkBox" hidden><p class="sub" id="bkAllInfo" style="margin:10px 0 0"></p><div class="tools" id="bkAllTools"></div><div id="bkAllOut" hidden><label for="bkAllTa">Si le téléchargement n’a pas démarré, copie ce texte et colle-le dans une note ou un message.</label><textarea id="bkAllTa" rows="6" readonly style="width:100%;font:.8rem monospace;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:8px"></textarea></div></div><button type="button" class="mrow" id="mnGuide"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.5 5 8 4.5 4 4.5v13c4 0 6.5.5 8 2 1.5-1.5 4-2 8-2v-13c-4 0-6.5.5-8 2z"/><path d="M12 6.5v13"/></svg><span>Guide de l’application</span><svg class="chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div></div>
 <div id="pwModal" class="noprint" hidden>
   <div class="pwbox" role="dialog" aria-modal="true" aria-labelledby="pwT">
     <h2 id="pwT"></h2>
@@ -168,6 +897,26 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
     <div class="tools"><button type="button" id="pwOk" class="main" style="margin-top:0;width:auto">Valider</button><button type="button" id="pwNo">Annuler</button></div>
   </div>
 </div>
+<script>
+(function(){
+  try{
+    var o=Storage.prototype.setItem,shown=false;
+    Storage.prototype.setItem=function(k,v){
+      try{return o.call(this,k,v);}
+      catch(e){
+        if(!shown){shown=true;
+          var f=function(){var d=document.createElement("div");d.className="warn noprint";d.setAttribute("role","alert");
+            d.style.cssText="position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:60;background:var(--card)";
+            d.textContent="Attention : le stockage du téléphone est plein ou bloqué, les dernières modifications ne sont plus enregistrées. Exporte une sauvegarde puis libère de la place. (Touche ici pour fermer)";
+            d.addEventListener("click",function(){d.remove();shown=false;});document.body.appendChild(d);};
+          if(document.body){f();}else{document.addEventListener("DOMContentLoaded",f);}
+        }
+        throw e;
+      }
+    };
+  }catch(x){}
+})();
+</script>
 <script>window.sciLink=function(root,p){var n=0;root.querySelectorAll("label+input,label+select").forEach(function(i){if(!i.id){i.id=p+(n++);}i.previousElementSibling.htmlFor=i.id;});};</script>
 <script>
 (function(){
@@ -211,12 +960,12 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
     var w=num(sh.poids),wf=String(sh.poids).trim()!=="",wOk=w>=8&&w<=15;
     var r={ok:false,warn:"",err:(wf&&!wOk)?"Le poids doit être compris entre 8 g et 15 g.":"",lines:[],kg:0};
     var s=num(sh.surface),p=num(sh.pieds),pok=true;
-    if(p>0&&num(sh.total)>0&&p>num(sh.total)){r.err=r.err||"Le nombre de pieds productifs ne peut pas dépasser le nombre total de pieds.";pok=false;}
+    if(p>0&&num(sh.total)>0&&p>num(sh.total)){r.err=r.err||"P prod ne peut pas dépasser le nombre total de pieds.";pok=false;}
     if(simple){
-      if(s>0.5){r.warn="L’inventaire exhaustif s’utilise sur une surface de 0,5 ha au maximum. Au-dessus, utilise le sondage stratifié.";pok=false;}
+      if(s>0.5){r.warn="L’inventaire exhaustif s’utilise jusqu’à S (ha) = 0,5. Au-dessus, utilise le sondage stratifié.";pok=false;}
     }else{
       var rg=sh.m==="A"?[0,100]:(sh.d==="forte"?[300,1e9]:[100,300]);
-      var nm=sh.m==="A"?"La méthode A s’utilise sur une strate de 100 pieds productifs au maximum.":(sh.d==="forte"?"La méthode C forte densité s’utilise à partir de 300 pieds productifs.":"La méthode C densité moyenne s’utilise de 100 à 300 pieds productifs.");
+      var nm=sh.m==="A"?"La méthode A s’utilise sur une strate de 100 P prod au maximum.":(sh.d==="forte"?"La méthode C forte densité s’utilise à partir de 300 P prod.":"La méthode C densité moyenne s’utilise de 100 à 300 P prod.");
       if(!(p>0)){pok=false;}
       else if(p<rg[0]||p>rg[1]){r.warn=nm;pok=false;}
     }
@@ -228,16 +977,16 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
         if(e.length>=5&&num(sh.pieds)>0){
           var mbp=e.reduce(function(a,x){return a+num(x.b);},0)/e.length,mgp=e.reduce(function(a,x){return a+num(x.g);},0)/e.length;
           b=mbp*num(sh.pieds);g=mgp;gSim=e.reduce(function(a,x){return a+num(x.b)*num(x.g);},0)/e.length*num(sh.pieds);
-          r.lines.push("Pieds de l’échantillon pris en compte : "+e.length,"Balais moyens par pied : "+fmt(mbp,2),"Gousses moyennes par balai : "+fmt(mgp,2),"Total de balais estimé : "+fmt(b,0));
+          r.lines.push("Pied E : "+e.length,"Balai M/pied : "+fmt(mbp,2),"G M/balai : "+fmt(mgp,2),"Total de balais estimé : "+fmt(b,0));
         }else{b=0;g=0;
           if(e.length<5){if(e.length||num(sh.pieds)>0){r.warn=r.warn||"Échantillon incomplet : "+e.length+" pied(s) complet(s) sur 5 minimum (balais et gousses par balai).";}}
-          else{r.warn=r.warn||"Renseigne le nombre de pieds productifs.";}
+          else{r.warn=r.warn||"Renseigne P prod.";}
         }
       }
       if(pok&&s>0&&b>0&&g>0&&wOk){
         var gTot=gSim>0?gSim:b*g;r.ok=true;r.kg=gTot*w/1000;
-        r.gt=gTot;r.bt=b;r.lines.push("Nombre total de gousses : "+fmt(gTot,0));
-        if(num(sh.pieds)>0&&s>0){r.lines.push("Densité : "+fmt(num(sh.pieds)/s,0)+" pieds productifs par hectare");}
+        r.gt=gTot;r.bt=b;r.lines.push("T gousses : "+fmt(gTot,0));
+        if(num(sh.pieds)>0&&s>0){r.lines.push("Densité : "+fmt(num(sh.pieds)/s,0)+" P prod par ha");}
       }
     }else{
       /* aucune limite de surface pour la méthode C */
@@ -247,7 +996,7 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
         var mg=ok.reduce(function(a,p){return a+num(p.g);},0)/ok.length;
         var n=s*10000/16,pn=mb*mg*w;
         r.ok=true;r.kg=pn*n/1000;r.gt=mb*mg*n;r.bt=mb*n;
-        r.lines.push("Placettes saisies : "+ok.length,"Balais moyens par placette : "+fmt(mb,2),"Gousses moyennes par balai : "+fmt(mg,2),"Pn moyen : "+fmt(pn,0)+" g","Nombre de placettes N : "+fmt(n,0),"Nombre total de gousses estimé : "+fmt(mb*mg*n,0));
+        r.lines.push("PL E : "+ok.length,"Balai M/PL : "+fmt(mb,2),"G M/balai : "+fmt(mg,2),"Pn moyen : "+fmt(pn,0)+" g","N : "+fmt(n,0),"T gousses : "+fmt(mb*mg*n,0));
       }
     }
     var gt=r.gt||0;function pc(n,p){return String(sh[p]==null?"":sh[p]).trim()!==""?num(sh[p]):(gt>0?num(sh[n])/gt*100:0);}
@@ -256,8 +1005,8 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
       r.ok=false;r.err=r.err||"TNC et TCH doivent être compris entre 0 et 100 %.";
     }else if(r.ok){
       var gm=num(sh.pieds)>0?r.gt/num(sh.pieds):0,pBrute=r.kg*(1-tnc/100),mTch=pBrute*tch/100;
-      if(gm>0){r.lines.push("Gousses matures par pied productif : "+fmt(gm,1));r.lines.push("Gousses nettes par pied : "+fmt(gm-gm*tnc/100,1));}
-      r.lines.push("TNC : "+fmt(tnc,1)+" % des gousses matures");
+      if(gm>0){r.lines.push("G mature/P prod : "+fmt(gm,1));r.lines.push("G N/Pied : "+fmt(gm-gm*tnc/100,1));}
+      r.lines.push("TNC : "+fmt(tnc,1)+" % de T gousses");
       r.lines.push("Production brute (après TNC) : "+fmt(pBrute,1)+" kg");
       r.lines.push("TCH ("+fmt(tch,1)+" %) : − "+fmt(mTch,1)+" kg");
       r.kg=pBrute-mTch;
@@ -287,12 +1036,21 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
         if(inP&&i===W.cur){inP=false;}else{W.cur=i;S=P;inP=true;}goP();}));});
     t.appendChild(btn("add","+ Ajouter une parcelle",function(){W.parcels.push(fresh());W.cur=W.parcels.length-1;S=W.parcels[W.cur];inP=true;goP();}));
     $("pdel").disabled=W.parcels.length<=1;}
+  function filled(v){return String(v==null?"":v).trim()!=="";}
+  function shHas(sh){
+    if(!sh){return false;}
+    if(["surface","pieds","total","balais","gousses","poids","tncN","tncP","tchN","tchP"].some(function(k){return filled(sh[k]);})){return true;}
+    return (sh.ech||[]).concat(sh.pl||[]).some(function(r){return !!r&&(filled(r.b)||filled(r.g));});
+  }
   function refresh(){
     W.parcels.forEach(function(P,i){P.code=parcelCode(i);});
     save();renderParcels();var pce=$("pCode");if(pce){pce.value=S.code||"";}
     var simple=S.part==="simple",r=calc(simple?S.simple:S.sheets[S.cur],simple);
     $("tabs").hidden=simple;$("secTot").hidden=simple;$("tot").hidden=simple;
     $("pSimple").classList.toggle("on",simple);$("pStr").classList.toggle("on",!simple);
+    var hs=shHas(S.simple),ht=S.sheets.some(shHas);
+    $("pStr").disabled=simple&&hs&&!ht;
+    $("pSimple").disabled=!simple&&ht&&!hs;
     [["tnc","tncN","tncP"],["tch","tchN","tchP"]].forEach(function(a){var c0=simple?S.simple:S.sheets[S.cur],pe=$(a[0]+"P"),ce=$(a[0]+"C"),fp=String(c0[a[2]]==null?"":c0[a[2]]).trim()!=="";
       if(pe&&document.activeElement!==pe&&!fp){pe.value=(r.gt>0&&String(c0[a[1]]||"").trim()!=="")?fmt(r[a[0]],2):"";}
       if(ce&&document.activeElement!==ce&&fp){ce.value=r.gt>0?String(Math.round(r.gt*r[a[0]]/100)):"";}});
@@ -305,7 +1063,7 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
     var res=$("res");res.innerHTML="";
     if(r.ok){
       r.lines.forEach(function(t){res.appendChild(mk("p",null,t));});
-      res.appendChild(mk("p",null,"Production nette estimée (vanille verte)"));
+      res.appendChild(mk("p",null,"Poids (kg)"));
       res.appendChild(mk("p","big",fmt(r.kg,1)+" kg"));
     }else{
       res.appendChild(mk("p",null,"Complète les champs pour voir le rendement de cette strate."));
@@ -317,11 +1075,11 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
       tot.appendChild(mk("p",null,"Strate "+(i+1)+" ("+lab(sh)+") : "+(c.ok?fmt(c.kg,1)+" kg":"à compléter")));
     });
     var surf=S.sheets.reduce(function(a,sh){return a+num(sh.surface);},0);
-    tot.appendChild(mk("p",null,"Surface totale des strates : "+fmt(surf,2)+" ha"));
+    tot.appendChild(mk("p",null,"S (ha) totale des strates : "+fmt(surf,2)));
     if(surf<=0){
-      tot.appendChild(mk("p",null,"Saisis la surface de chaque strate pour voir le total."));
+      tot.appendChild(mk("p",null,"Saisis S (ha) de chaque strate pour voir le total."));
     }else if(surf<0.5){
-      tot.appendChild(mk("p","warn","Le sondage stratifié s’utilise sur 0,5 ha ou plus : la surface totale des feuilles (A + C) doit faire au moins 0,5 ha. Ajoute des strates ou corrige les surfaces."));
+      tot.appendChild(mk("p","warn","Le sondage stratifié s’utilise sur 0,5 ha ou plus : S (ha) totale des feuilles (A + C) doit faire au moins 0,5. Ajoute des strates ou corrige S (ha)."));
     }else{
       tot.appendChild(mk("p",null,"Total (strates complétées : "+cnt+" sur "+S.sheets.length+")"));
       tot.appendChild(mk("p","big",fmt(sum,1)+" kg"));
@@ -353,20 +1111,20 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
     head.appendChild(mk("h2",null,simple?"Inventaire exhaustif – Méthode A":"Strate "+(S.cur+1)+" – "+lab(sh)));
     var del=mk("button","del","Supprimer");del.type="button";del.disabled=simple||S.sheets.length<=1;
     twoStep(del,"Confirmer ?",function(){S.sheets.splice(S.cur,1);S.cur=Math.max(0,S.cur-1);renderTabs();renderSheet();refresh();});
-    head.appendChild(del);card.appendChild(head);var d0=mk("div","fld full"),i0=mk("input");d0.appendChild(mk("label",null,"Code parcelle (code producteur – n° de parcelle)"));i0.id="pCode";i0.readOnly=true;i0.placeholder="saisis d’abord le code producteur";i0.value=S.code||"";d0.appendChild(i0);card.appendChild(d0);
+    head.appendChild(del);card.appendChild(head);var d0=mk("div","fld full"),i0=mk("input");d0.appendChild(mk("label",null,"ID parcel"));i0.id="pCode";i0.readOnly=true;i0.placeholder="saisis d’abord ID prod";i0.value=S.code||"";d0.appendChild(i0);card.appendChild(d0);
     if(sh.m==="A"){
-      field(card,simple?"Surface de la parcelle (ha) – 0,5 maximum":"Surface de la strate (ha)",sh,"surface","ex. 0,3");
-      field(card,simple?"Nombre de pieds productifs":"Nombre de pieds productifs de la strate – 100 maximum",sh,"pieds","ex. 80");
+      field(card,simple?"S (ha) – 0,5 maximum":"S (ha)",sh,"surface","ex. 0,3");
+      field(card,simple?"P prod":"P prod – 100 maximum",sh,"pieds","ex. 80");
       field(card,"Nombre total de pieds (productifs + non productifs)",sh,"total","ex. 1200");
-      roField(card,"Pieds productifs sur pieds total (%)","pPct");
+      roField(card,"P prod sur pieds total (%)","pPct");
       sampleBlock2();
-      field(card,"Poids d’une gousse (g) – entre 8 et 15",sh,"poids","ex. 10 ou 10,5");
-      roField(card,"Balais moyens par pied productif","bPied");
+      field(card,"Gousse (g) – entre 8 et 15",sh,"poids","ex. 10 ou 10,5");
+      roField(card,"Balai M/pied","bPied");
     }else{
-      field(card,"Surface de la strate (ha)",sh,"surface","ex. 1");
+      field(card,"S (ha)",sh,"surface","ex. 1");
       
-      field(card,"Poids d’une gousse (g) – entre 8 et 15",sh,"poids","ex. 10 ou 10,5");
-      card.appendChild(mk("label","fld full","Placettes (16 m²)"));
+      field(card,"Gousse (g) – entre 8 et 15",sh,"poids","ex. 10 ou 10,5");
+      card.appendChild(mk("label","fld full","PL E (16 m²)"));
       sh.pl.forEach(function(p,i){
         var row=mk("div","pl");
         row.appendChild(mk("div","num",String(i+1)));
@@ -378,11 +1136,11 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
       });
       card.appendChild(btn("main","+ Ajouter une placette",function(){sh.pl.push({b:"",g:""});renderSheet();refresh();}));
     }
-    var pLab=sh.m==="A"?(simple?"Nombre de pieds productifs":"Nombre de pieds productifs de la strate – 100 maximum"):"Nombre de pieds productifs de la strate – "+(sh.d==="forte"?"300 ou plus":"100 à 300");
+    var pLab=sh.m==="A"?(simple?"P prod":"P prod – 100 maximum"):"P prod – "+(sh.d==="forte"?"300 ou plus":"100 à 300");
     if(!simple&&sh.m!=="A"){field(card,pLab,sh,"pieds","ex. 80");}
     if(!simple&&sh.m!=="A"){field(card,"Nombre total de pieds (productifs + non productifs)",sh,"total","ex. 1200");}
-    if(!simple&&sh.m!=="A"){roField(card,"Pieds productifs sur pieds total (%)","pPct");}
-    if(!simple&&sh.m!=="A"){roField(card,"Balais moyens par pied productif","bPied");}
+    if(!simple&&sh.m!=="A"){roField(card,"P prod sur pieds total (%)","pPct");}
+    if(!simple&&sh.m!=="A"){roField(card,"Balai M/pied","bPied");}
     function roField(parent,label,id){var d=mk("div","fld"),i=mk("input");d.appendChild(mk("label",null,label));i.id=id;i.readOnly=true;i.placeholder="calculé automatiquement";d.appendChild(i);parent.appendChild(d);}
     
     var tncCnt=field(card,"Nombre de gousses non commercialisables",sh,"tncN","ex. 12",function(){sh.tncP="";});tncCnt.id="tncC";
@@ -401,7 +1159,7 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
     }
     function fromPct(key,cnt,p,raw){sh[key]="";sh[key.replace("N","P")]=String(raw).trim();if(String(raw).trim()===""){cnt.value="";}}
     function sampleBlock2(){
-      card.appendChild(mk("label","fld full","Échantillon de pieds productifs (minimum 5 pieds)"));
+      card.appendChild(mk("label","fld full","Échantillon de P prod (minimum 5 pieds)"));
       if(!sh.ech){sh.ech=[];}
       while(sh.ech.length<5){sh.ech.push({b:"",g:""});}
       
@@ -480,7 +1238,7 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
     paper.appendChild(grid([fld("N° de fiche FCI","fci"),fld("Campagne","campagne"),fld("Date de contrôle","dateControle","date"),fld("Durée de la visite","duree")]));
 
     paper.appendChild(mk("div","bar","A — IDENTIFICATION DU PRODUCTEUR"));
-    paper.appendChild(grid([fld("Nom du producteur","nom"),fld("Genre","genre","sel"),fld("Code producteur","code"),fld("Année entrée BIOLANDES","annee","num"),fld("CIN n°","cin"),fld("Date de naissance","naissance","date"),fld("Commune","commune"),fld("Fokontany / Village","fokontany"),fld("Surnom","surnom"),fld("Téléphone","tel")]));
+    paper.appendChild(grid([fld("Nom du producteur","nom"),fld("Genre","genre","sel"),fld("ID prod","code"),fld("Année entrée BIOLANDES","annee","num"),fld("CIN n°","cin"),fld("Date de naissance","naissance","date"),fld("Commune","commune"),fld("Fokontany / Village","fokontany"),fld("Surnom","surnom"),fld("Téléphone","tel")]));
 
     paper.appendChild(mk("div","bar","A.1 — Composition du ménage"));
     paper.appendChild(grid([fld("Nombre de personnes à charge","charge","num"),fld("Nombre d’actifs agricoles","actifs","num")]));
@@ -495,12 +1253,15 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
     cols.forEach(function(c){tg.appendChild(mk("div","th",c[0]));});
     F.rows.forEach(function(r){cols.forEach(function(c){var cell=mk("div","td");var el=ctl(r,c[1],c[2]||"txt");el.setAttribute("aria-label",c[0]);cell.appendChild(el);tg.appendChild(cell);});});
     tw.appendChild(tg);paper.appendChild(tw);
-    paper.appendChild(mk("div","foot","SCI BIOLANDES Madagascar — Document interne confidentiel — À conserver dans le dossier producteur et présenter lors de l’audit externe · Page 1 / 8"));
+    paper.appendChild(mk("div","foot","SCI BIOLANDES Madagascar — Document interne confidentiel — À conserver dans le dossier producteur et présenter lors de l’audit externe · Page 1 / 7"));
     root.appendChild(paper);window.sciLink(paper,"g");
   }
 
-  function mode(m){var map={home:"mHome",list:"mList",est:"mEst",fci:"mFci",fiches:"mFci"};$("home").hidden=m!=="home";$("fiches").hidden=m!=="fiches";$("list").hidden=m!=="list";document.body.setAttribute("data-mode",m);$("estim").hidden=m!=="est";root.hidden=m!=="fci";$("backup").hidden=m==="home"||m==="list"||m==="fiches";$("mEst").hidden=m!=="list";["mHome","mList","mEst","mFci"].forEach(function(id){$(id).classList.toggle("on",id===map[m]);});try{window.scrollTo(0,0);}catch(e){}}
-  $("mEst").addEventListener("click",function(){if((!$("home").hidden||!$("list").hidden)&&window.SCI){window.SCI.fresh();return;}mode("est");});
+  function mode(m){var map={home:"mHome",list:"mList",est:"mEst",fci:"mFci",fiches:"mFci",guide:"mList"};$("guide").hidden=m!=="guide";$("home").hidden=m!=="home";$("fiches").hidden=m!=="fiches";$("list").hidden=m!=="list";document.body.setAttribute("data-mode",m);$("estim").hidden=m!=="est";root.hidden=m!=="fci";$("backup").hidden=m==="home"||m==="list"||m==="fiches"||m==="guide";$("mEst").hidden=m!=="list";$("mBk").hidden=!(m==="home"||m==="list"||m==="fiches");$("mBack").hidden=!(m==="est"||m==="fci"||m==="guide");$("bkModal").hidden=true;$("mBook").hidden=m!=="home";["mHome","mList","mEst","mFci","mBook"].forEach(function(id){$(id).classList.toggle("on",id===map[m]);});try{window.scrollTo(0,0);}catch(e){}}
+  $("mEst").addEventListener("click",function(){if((!$("home").hidden||!$("list").hidden||!$("guide").hidden)&&window.SCI){window.SCI.fresh();return;}mode("est");});
+  $("mBook").addEventListener("click",function(){mode("guide");});
+  $("mnGuide").addEventListener("click",function(){$("bkModal").hidden=true;mode("guide");});
+  $("mBack").addEventListener("click",function(){var m=document.body.getAttribute("data-mode");mode(m==="fci"?"fiches":"list");});
   $("mList").addEventListener("click",function(){mode("list");});
   $("mFci").addEventListener("click",function(){mode("fiches");});
   build();
@@ -524,7 +1285,7 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
   function mk(t,c,x){var e=document.createElement(t);if(c){e.className=c;}if(x!=null){e.textContent=x;}return e;}
   function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}
   function set(k,v){try{if(v==null){localStorage.removeItem(k);}else{localStorage.setItem(k,v);}return true;}catch(e){return false;}}
-  function say(t){$("bkInfo").textContent=t;}
+  function say(t){$("bkInfo").textContent=t;var b=$("bkAllInfo");if(b&&!$("bkModal").hidden){b.textContent=t;b.style.color="";}}
   function recs(){try{var a=JSON.parse(get(RK)||"[]");return Array.isArray(a)?a:[];}catch(e){return [];}}
   function snap(){var d={};K.forEach(function(k){d[k]=get(k);});return d;}
   function name(){var h={};try{h=JSON.parse(get(K[1])||"{}")||{};}catch(e){}return [h.nom,h.code].filter(Boolean).join(" · ")||"Sans nom";}
@@ -546,7 +1307,7 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
       o.addEventListener("click",function(){openRec(r);});
       two(d,"Confirmer l’effacement ?",function(){needPw(function(){delRec(r.id);});});
       ch.appendChild(o);ch.appendChild(d);it.appendChild(row);it.appendChild(ch);L.appendChild(it);});
-    if(!recs().length){L.appendChild(mk("p","sub","Aucun dossier enregistré. Appuie sur + pour créer un dossier, puis sur « Enregistrer ce dossier »."));}renderHome();renderFiches();}
+    if(!recs().length){L.appendChild(mk("p","sub","Aucun dossier enregistré. Appuie sur + pour créer un dossier, puis sur « Enregistrer ce dossier »."));}renderHome();renderFiches();bkInfoAll();}
   function renderFiches(){
     var C=$("fList");if(!C){return;}C.innerHTML="";
     recs().slice().reverse().forEach(function(r){
@@ -558,9 +1319,9 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
   }
   function recTable(r){
     var h={};try{h=JSON.parse((r.d&&r.d[K[1]])||"{}")||{};}catch(e){}
-    var rows=window.sciRows?window.sciRows(r.d&&r.d[K[0]]):[],data=[],sum=0,labs=[];
+    var rows=(window.sciRows?window.sciRows(r.d&&r.d[K[0]]):[]).filter(function(x){return x.ok;}),data=[],sum=0,labs=[];
     var head=["Producteur (nom et prénom)","ID prod","ID parcel","Strate / méthode","S (ha)","P prod","Gousse (g)"],dec=[null,null,null,null,2,0,1];
-    var AB={"Pieds de l’échantillon pris en compte":"Pied E","Balais moyens par pied":"Balai M/pied","Gousses moyennes par balai":"G M/balai","Nombre total de gousses":"T gousses","Gousses matures par pied productif":"G mature/P prod","Gousses nettes par pied":"G N/Pied"},DROP=["Densité","TNC","TCH – gousses tombées déduites","Production brute (après TNC)"];
+    var AB={},DROP=["Densité","TNC","TCH – gousses tombées déduites","Production brute (après TNC)"];
     rows.forEach(function(x){
       x.ln=x.ln.filter(function(p){return DROP.indexOf(p[0])<0;}).map(function(p){return [AB[p[0]]||p[0],p[1]];});
       x.ln.forEach(function(p){if(labs.indexOf(p[0])<0){labs.push(p[0]);}});
@@ -576,7 +1337,7 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
     var total=head.map(function(_,i){return i===0?"Total":"";});total[head.length-1]=sum;
     return {head:head,dec:dec,rows:data,sum:sum,total:total};
   }
-  function cvs(v,d){return v==null||isNaN(v)?"":(d==null?String(v):Number(v).toFixed(d)).replace(".",",");}
+  function cvs(v,d){return v==null||v===""||isNaN(v)?"":(d==null?String(v):Number(v).toFixed(d)).replace(".",",");}
   function exportRec(r){
     var t=recTable(r),L=[t.head.map(function(x){return '"'+x.replace(/"/g,'""')+'"';}).join(";")];
     function lc(v){v=String(v==null?"":v).trim();if(v===""){return "";}var m=/^(-?\d[\d\s\u00a0\u202f]*(?:,\d+)?)\s*(g|kg|%)?$/.exec(v.replace(/^[−-]\s*/,"-"));
@@ -599,11 +1360,11 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
       t.head.forEach(function(x){hr.appendChild(mk("th",null,x));});
       var th=mk("thead");th.appendChild(hr);tb.appendChild(th);
       var bd=mk("tbody");
-      function addRow(row,cls){var tr=mk("tr",cls);row.forEach(function(v,i){var d=t.dec[i],s=(d==null||d==="l")?String(v==null?"":v):(v==null||isNaN(v)?"":Number(v).toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}));tr.appendChild(mk("td",(d==null||d==="l")?null:"n",s));});bd.appendChild(tr);}
+      function addRow(row,cls){var tr=mk("tr",cls);row.forEach(function(v,i){var d=t.dec[i],s=(d==null||d==="l")?String(v==null?"":v):(v==null||v===""||isNaN(v)?"":Number(v).toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}));tr.appendChild(mk("td",(d==null||d==="l")?null:"n",s));});bd.appendChild(tr);}
       t.rows.forEach(function(row){addRow(row);});
       if(t.rows.length){addRow(t.total,"sum");}
       tb.appendChild(bd);tw.appendChild(tb);card.appendChild(tw);
-      if(!t.rows.length){card.appendChild(mk("p","sub","Aucune parcelle renseignée dans ce dossier."));}
+      if(!t.rows.length){card.appendChild(mk("p","sub","Aucune estimation de rendement complète dans ce dossier."));}
       var tl=mk("div","tools"),eb=mk("button",null,"Télécharger le tableau Excel");eb.type="button";
       eb.addEventListener("click",function(){exportRec(r);});
       tl.appendChild(eb);card.appendChild(tl);C.appendChild(outer);
@@ -625,17 +1386,74 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
     else if(hashPw(a)!==get(PK)){pwErr("Mot de passe incorrect.");return;}
     var f=pwCb;pwClose();if(f){f();}});
   ["pw1","pw2"].forEach(function(id){$(id).addEventListener("keydown",function(e){if(e.key==="Enter"){$("pwOk").click();}});});
-  function out(file,mime,text){
+  function out(file,mime,text,done){
+    var all=!$("bkModal").hidden;
+    function ok(){if(done){done();}}
     function fallback(){
       try{var u=URL.createObjectURL(new Blob([text],{type:mime})),a=document.createElement("a");a.href=u;a.download=file;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},4000);}catch(e){}
-      var ta=$("bkTa");ta.value=text;$("bkOut").hidden=false;ta.onclick=function(){ta.select();};say("Fichier : "+file);}
+      var ta=$(all?"bkAllTa":"bkTa");ta.value=text;$(all?"bkAllOut":"bkOut").hidden=false;ta.onclick=function(){ta.select();};say("Fichier : "+file);ok();}
     try{var f=new File([text],file,{type:mime});
-      if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:file}).then(function(){say("Fichier partagé : "+file);},function(e){if(!e||e.name!=="AbortError"){fallback();}});return;}}catch(e){}
+      if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:file}).then(function(){say("Fichier partagé : "+file);ok();},function(e){if(!e||e.name!=="AbortError"){fallback();}});return;}}catch(e){}
     fallback();}
   function fciHtml(){var p=document.querySelector("#fci .paper"),c=p.cloneNode(true),s=p.querySelectorAll("input,select"),d=c.querySelectorAll("input,select");
     for(var i=0;i<d.length;i++){var v=document.createElement("span");v.textContent=s[i].value;v.style.cssText="display:block;min-height:1.2em;border-bottom:1px solid #999";d[i].parentNode.replaceChild(v,d[i]);}
     return "<!doctype html><html lang=\"fr\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>FCI</title><style>"+document.querySelector("style").textContent+"</style></head><body><main><button class=\"noprint\" onclick=\"print()\">Imprimer</button><div id=\"fci\">"+c.outerHTML+"</div></main></body></html>";}
   window.SCI={fresh:function(){keepCur();K.forEach(function(k){set(k,null);});set(AK,null);set(LK,null);set("sciblmd-goto","est");location.reload();},clear:function(){clear();set("sciblmd-goto","est");location.reload();},exportFci:function(){out("FCI_"+name().replace(/[^\w-]+/g,"_")+".html","text/html",fciHtml());}};
+  var LBK="sciblmd-lastbackup";
+  function bkInfoAll(){var el=$("bkAllInfo");if(!el){return;}var t=get(LBK),n=recs().length;
+    if(!n){el.textContent="Aucun dossier enregistré à sauvegarder pour le moment.";el.style.color="";return;}
+    var d=t?new Date(t):null,good=!!d&&!isNaN(d.getTime()),old=!good||(Date.now()-d.getTime())>30*864e5;
+    el.textContent=(good?"Dernière sauvegarde : "+d.toLocaleDateString("fr-FR")+". ":"Aucune sauvegarde faite pour l’instant. ")+(old?"Pense à en faire une et à l’envoyer sur WhatsApp ou par e-mail.":"");
+    el.style.color=old?"var(--danger)":"";}
+  function backupAll(){
+    keepCur();var a=recs();
+    if(!a.length){say("Aucun dossier enregistré à sauvegarder.");return;}
+    var ts=new Date().toISOString();
+    out("Sauvegarde_SCI_BLMD_"+ts.slice(0,10)+".json","application/json",JSON.stringify({app:"sciblmd",v:1,ts:ts,records:a}),function(){set(LBK,ts);bkInfoAll();});
+  }
+  function cleanRec(r){
+    if(!r||typeof r!=="object"||!r.id||!r.d||typeof r.d!=="object"){return null;}
+    var d={};
+    for(var i=0;i<K.length;i++){var v=r.d[K[i]];
+      if(v==null){d[K[i]]=null;continue;}
+      if(typeof v!=="string"){return null;}
+      try{JSON.parse(v);}catch(e){return null;}
+      d[K[i]]=v;}
+    return {id:String(r.id),label:String(r.label||"Sans nom"),ts:String(r.ts||""),d:d};
+  }
+  function importAll(file){
+    var fr=new FileReader();
+    fr.onerror=function(){say("Lecture du fichier impossible.");};
+    fr.onload=function(){
+      var o=null;try{o=JSON.parse(String(fr.result));}catch(e){}
+      if(!o||o.app!=="sciblmd"||!Array.isArray(o.records)){say("Fichier non reconnu : choisis un fichier « Sauvegarde_SCI_BLMD_….json ».");return;}
+      var cur=recs(),by={},add=0,upd=0,skip=0;cur.forEach(function(x){by[x.id]=x;});
+      o.records.forEach(function(raw){
+        var r=cleanRec(raw);if(!r){skip++;return;}
+        var ex=by[r.id];
+        if(!ex){cur.push(r);by[r.id]=r;add++;}
+        else if(r.id!==get(AK)&&r.ts>String(ex.ts||"")){cur[cur.indexOf(ex)]=r;by[r.id]=r;upd++;}
+      });
+      if(!set(RK,JSON.stringify(cur))){say("Importation impossible (stockage plein ou indisponible).");return;}
+      render();
+      say("Importation terminée : "+add+" ajouté(s), "+upd+" mis à jour"+(skip?", "+skip+" ignoré(s) (invalides)":"")+".");
+    };
+    fr.readAsText(file);
+  }
+  var T2=$("bkAllTools");
+  if(T2){
+    var b1=mk("button",null,"Exporter une sauvegarde (JSON)"),b2=mk("button",null,"Importer une sauvegarde"),fi=mk("input");
+    b1.type="button";b2.type="button";fi.type="file";fi.accept=".json,application/json";fi.hidden=true;
+    b1.addEventListener("click",backupAll);b2.addEventListener("click",function(){fi.click();});
+    fi.addEventListener("change",function(){var f=fi.files&&fi.files[0];if(f){importAll(f);}fi.value="";});
+    T2.appendChild(b1);T2.appendChild(b2);T2.appendChild(fi);
+  }
+  function bkClose(){$("bkModal").hidden=true;}
+  $("mBk").addEventListener("click",function(){$("mnBkBox").hidden=true;$("bkAllOut").hidden=true;$("bkModal").hidden=false;});
+  $("mnBk").addEventListener("click",function(){var bx=$("mnBkBox");bx.hidden=!bx.hidden;if(!bx.hidden){bkInfoAll();$("bkAllOut").hidden=true;}});
+  $("bkX").addEventListener("click",bkClose);
+  $("bkModal").addEventListener("click",function(e){if(e.target===$("bkModal")){bkClose();}});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!$("bkModal").hidden){bkClose();}});
   var T=$("bkTools");
   function bt(txt,fn){var b=mk("button",null,txt);b.type="button";if(fn){b.addEventListener("click",fn);}T.appendChild(b);return b;}
   bt("Enregistrer ce dossier",function(){ensurePw(function(){if(saveCur()){set("sciblmd-msg","Dossier enregistré : "+name());set("sciblmd-goto","home");K.forEach(function(k){set(k,null);});set(AK,null);set(LK,null);location.reload();}});});
@@ -671,15 +1489,29 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
 </script>
 <script>
 (function(){
-  var TK="sciblmd-theme-v1",T={mode:"auto",accent:"",text:"",fs:100,shape:"uniforme"};
+  var TK="sciblmd-theme-v1",T={mode:"auto",accent:"",text:"",fs:100,shape:"uniforme",font:""};
   try{var raw=localStorage.getItem(TK);if(raw){T=Object.assign(T,JSON.parse(raw));}}catch(e){}
-  if(T.frame===false&&T.shape==="uniforme"){T.shape="aucun";}
+  if(["uniforme","ovale","carre"].indexOf(T.shape)<0){T.shape="uniforme";}
   function $(i){return document.getElementById(i);}
   function mk(t,c,x){var e=document.createElement(t);if(c){e.className=c;}if(x!=null){e.textContent=x;}return e;}
   function save(){try{localStorage.setItem(TK,JSON.stringify(T));}catch(e){}}
   function lum(h){var m=/^#?([0-9a-f]{6})$/i.exec(h||"");if(!m){return 0;}var n=parseInt(m[1],16),c=[n>>16&255,n>>8&255,n&255].map(function(v){v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4);});return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2];}
+  var FONTS=[["","Par défaut",""],
+   ["serif","Classique (serif)","Georgia,\"Times New Roman\",Times,serif"],
+   ["machine","Machine à écrire","\"Courier New\",Courier,monospace"],
+   ["arrondi","Arrondie","\"Trebuchet MS\",\"Segoe UI\",Roboto,sans-serif"],
+   ["manuscrit","Manuscrite","\"Segoe Script\",\"Brush Script MT\",\"Comic Sans MS\",cursive"],
+   ["gothique","Gothique","UnifrakturCook,UnifrakturMaguntia,\"Old English Text MT\",\"Blackadder ITC\",\"Engravers MT\",fantasy"],
+   ["elegante","Élégante","\"Palatino Linotype\",Palatino,\"Book Antiqua\",\"URW Palladio L\",Georgia,serif"],
+   ["large","Large et lisible","Verdana,Geneva,Tahoma,sans-serif"],
+   ["condensee","Condensée","\"Arial Narrow\",\"Roboto Condensed\",\"Helvetica Neue\",sans-serif-condensed,Arial,sans-serif"],
+   ["humaniste","Humaniste","\"Gill Sans\",\"Gill Sans MT\",Calibri,Candara,\"Segoe UI\",sans-serif"],
+   ["chancellerie","Chancellerie","\"Apple Chancery\",\"URW Chancery L\",\"Zapf Chancery\",\"Lucida Calligraphy\",cursive"],
+   ["titre","Titre gras","Impact,\"Arial Black\",\"Haettenschweiler\",sans-serif"]];
+  function ffOf(k){for(var i=0;i<FONTS.length;i++){if(FONTS[i][0]===k){return FONTS[i][2];}}return "";}
   function apply(){
     var el=document.documentElement,s=el.style;
+    var ff=ffOf(T.font);if(ff){s.setProperty("--ff",ff);}else{s.removeProperty("--ff");}
     if(T.mode==="auto"){el.removeAttribute("data-theme");}else{el.setAttribute("data-theme",T.mode);}
     if(T.accent){s.setProperty("--accent",T.accent);s.setProperty("--on-accent",lum(T.accent)>0.5?"#111111":"#ffffff");s.setProperty("--soft","color-mix(in srgb, "+T.accent+" 16%, var(--card))");}
     else{["--accent","--on-accent","--soft"].forEach(function(k){s.removeProperty(k);});}
@@ -690,22 +1522,35 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
     var m=document.querySelector('meta[name="theme-color"]');if(m){m.setAttribute("content",T.accent||"#2f7d32");}
   }
   apply();
-  var ACC=["#2f7d32","#1b5e20","#43a047","#00897b","#00acc1","#0288d1","#1565c0","#3949ab","#5e35b1","#8e24aa","#d81b60","#e53935","#f4511e","#fb8c00","#f9a825","#6d4c41","#546e7a","#212121"];
-  var TXT=["#000000","#1d2a1d","#37474f","#1a237e","#4a148c","#880e4f","#b71c1c","#3e2723","#e6efe6","#ffffff"];
+  var ACC=["#e53935","#fb8c00","#f9a825","#2f7d32","#1565c0","#3949ab","#8e24aa","#1b5e20","#43a047","#00897b","#00acc1","#0288d1","#5e35b1","#d81b60","#f4511e","#6d4c41","#546e7a","#212121"];
+  var TXT=ACC.concat(["#000000","#ffffff","#1d2a1d","#37474f","#1a237e","#4a148c","#880e4f","#b71c1c","#3e2723","#e6efe6"]);
+  function mixc(h,t,a){var n=parseInt(h.slice(1),16),m=parseInt(t.slice(1),16),r=[16,8,0].map(function(sh){var x=n>>sh&255,y=m>>sh&255,v=Math.round(x+(y-x)*a);return (v<16?"0":"")+v.toString(16);});return "#"+r.join("");}
+  function trio(h){if(h==="#000000"){return ["#000000","#404040","#808080"];}if(h==="#ffffff"){return ["#ffffff","#e6e6e6","#cccccc"];}return [mixc(h,"#000000",.4),h,mixc(h,"#ffffff",.5)];}
+  var CH='<svg class="chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
   var modal=mk("div");modal.id="thModal";modal.className="noprint";modal.hidden=true;
   modal.innerHTML='<div class="thbox" role="dialog" aria-modal="true" aria-labelledby="thT"><div class="head"><h2 id="thT">Paramètres</h2><button type="button" id="thX" aria-label="Fermer">✕</button></div>'
-   +'<p class="sec">Thème</p><div class="tabs" id="thMode"></div>'
+   +'<div id="thMain"><button type="button" class="thback thmenu">‹ Menu</button>'
+   +'<button type="button" class="mrow" data-v="thColors"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.2 0 2-.8 2-1.8 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10.5" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/></svg><span>Couleurs</span>'+CH+'</button>'
+   +'<button type="button" class="mrow" data-v="thTheme"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19 8 6l5 13"/><path d="M4.8 14.5h6.4"/><path d="M15 19l3-8 3 8"/><path d="M16 16.5h4"/></svg><span>Thème et taille de police</span>'+CH+'</button>'
+   +'<button type="button" class="mrow" data-v="thFont"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5h14"/><path d="M12 5v14"/><path d="M9 19h6"/></svg><span>Style d’écriture</span>'+CH+'</button>'
+   +'<button type="button" class="mrow" data-v="thFrame"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="3"/></svg><span>Cadrage</span>'+CH+'</button>'
+   +'<button type="button" class="reset" id="thRs">Réinitialiser les paramètres</button><p class="hint" style="text-align:center;margin-top:14px">Data Collector SCI BLMD · Version 1.4</p></div>'
+   +'<div class="thv" id="thColors" hidden><button type="button" class="thback">‹ Paramètres</button>'
    +'<p class="sec">Couleur principale</p><div class="swg" id="thAcc"></div>'
-   +'<p class="sec">Couleur du texte</p><div class="swg" id="thTxt"></div>'
-   +'<p class="sec">Taille de police : <span id="thFsv"></span></p><input type="range" id="thFs" min="80" max="150" step="5" style="padding:0;border:none;background:transparent">'
-   +'<p class="sec">Cadrage</p><div class="tabs" id="thFr"></div>'
-   +'<button type="button" class="reset" id="thRs">Réinitialiser les paramètres</button></div>';
+   +'<p class="sec">Couleur du texte</p><div class="swg" id="thTxt"></div></div>'
+   +'<div class="thv" id="thTheme" hidden><button type="button" class="thback">‹ Paramètres</button>'
+   +'<p class="sec">Thème</p><div class="tabs" id="thMode"></div>'
+   +'<p class="sec">Taille de police : <span id="thFsv"></span></p><input type="range" id="thFs" min="80" max="150" step="5" style="padding:0;border:none;background:transparent"></div>'
+   +'<div class="thv" id="thFont" hidden><button type="button" class="thback">‹ Paramètres</button>'
+   +'<p class="sec">Style d’écriture</p><div id="thFf" style="display:flex;flex-direction:column;gap:8px"></div></div>'
+   +'<div class="thv" id="thFrame" hidden><button type="button" class="thback">‹ Paramètres</button>'
+   +'<p class="sec">Cadrage</p><div class="tabs" id="thFr"></div></div></div>';
   document.body.appendChild(modal);
   function seg(id,items,cur,set){var c=$(id);c.innerHTML="";items.forEach(function(it){var b=mk("button","tab"+(cur()===it[0]?" on":""),it[1]);b.type="button";b.addEventListener("click",function(){set(it[0]);apply();save();paint();});c.appendChild(b);});}
   function swatches(id,list,cur,set,autoLabel){
     var c=$(id);c.innerHTML="";
     if(autoLabel){var a=mk("button","tab"+(!cur()?" on":""),autoLabel);a.type="button";a.addEventListener("click",function(){set("");apply();save();paint();});c.appendChild(a);}
-    list.forEach(function(col){var b=mk("button","sw"+((cur()||(id==="thAcc"?"#2f7d32":"")).toLowerCase()===col?" on":""));b.type="button";b.style.background=col;b.setAttribute("aria-label",col);b.addEventListener("click",function(){set(col);apply();save();paint();});c.appendChild(b);});
+    list.forEach(function(base){var g=mk("span","swt");trio(base).forEach(function(col){var b=mk("button","sw"+((cur()||(id==="thAcc"?"#2f7d32":"")).toLowerCase()===col?" on":""));b.type="button";b.style.background=col;b.setAttribute("aria-label",col);b.addEventListener("click",function(){set(col);apply();save();paint();});g.appendChild(b);});c.appendChild(g);});
     var p=mk("input");p.type="color";p.value=/^#[0-9a-f]{6}$/i.test(cur())?cur():(id==="thAcc"?"#2f7d32":"#1d2a1d");p.title="Autre couleur";p.setAttribute("aria-label","Autre couleur");p.style.cssText="width:44px;height:34px;padding:2px";
     p.addEventListener("input",function(){set(p.value);apply();save();});p.addEventListener("change",function(){paint();});
     c.appendChild(p);
@@ -714,20 +1559,42 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
     seg("thMode",[["auto","Auto"],["light","Clair"],["dark","Sombre"]],function(){return T.mode;},function(v){T.mode=v;});
     swatches("thAcc",ACC,function(){return T.accent;},function(v){T.accent=v;});
     swatches("thTxt",TXT,function(){return T.text;},function(v){T.text=v;},"Auto");
-    seg("thFr",[["uniforme","Uniforme"],["carre","Carré"],["ovale","Ovale"],["aucun","Sans cadres"]],function(){return T.shape;},function(v){T.shape=v;});
+    seg("thFr",[["uniforme","Défaut"],["ovale","Ovale"],["carre","Carré"]],function(){return T.shape;},function(v){T.shape=v;});
+    var ff=$("thFf");ff.innerHTML="";
+    FONTS.forEach(function(f){var b=mk("button","tab"+((T.font||"")===f[0]?" on":""),f[1]);b.type="button";b.style.textAlign="left";if(f[2]){b.style.fontFamily=f[2];}b.addEventListener("click",function(){T.font=f[0];apply();save();paint();});ff.appendChild(b);});
     $("thFs").value=T.fs;$("thFsv").textContent=T.fs+" %";
   }
   $("thFs").addEventListener("input",function(){T.fs=Number($("thFs").value);$("thFsv").textContent=T.fs+" %";apply();save();});
-  $("thRs").addEventListener("click",function(){T={mode:"auto",accent:"",text:"",fs:100,shape:"uniforme"};apply();save();paint();});
+  $("thRs").addEventListener("click",function(){T={mode:"auto",accent:"",text:"",fs:100,shape:"uniforme",font:""};apply();save();paint();});
   function close(){modal.hidden=true;}
   $("thX").addEventListener("click",close);
   modal.addEventListener("click",function(e){if(e.target===modal){close();}});
   document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!modal.hidden){close();}});
-  var mb=mk("button");mb.id="mMenu";mb.type="button";mb.title="Paramètres";mb.setAttribute("aria-label","Paramètres");
-  mb.innerHTML='<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="12" cy="19" r="1.9"/></svg>';
-  mb.addEventListener("click",function(){paint();modal.hidden=false;});
-  document.body.appendChild(mb);
+  var TT={thColors:"Couleurs",thTheme:"Thème et taille de police",thFont:"Style d’écriture",thFrame:"Cadrage"};
+  function showV(v){$("thMain").hidden=!!v;["thColors","thTheme","thFont","thFrame"].forEach(function(id){$(id).hidden=id!==v;});$("thT").textContent=v?TT[v]:"Paramètres";}
+  [].forEach.call(modal.querySelectorAll("[data-v]"),function(bn){bn.addEventListener("click",function(){showV(bn.getAttribute("data-v"));});});
+  [].forEach.call(modal.querySelectorAll(".thback:not(.thmenu)"),function(bn){bn.addEventListener("click",function(){showV("");});});
+  $("thMain").querySelector(".thmenu").addEventListener("click",function(){close();$("mnBkBox").hidden=true;$("bkAllOut").hidden=true;$("bkModal").hidden=false;});
+  $("mnSet").addEventListener("click",function(){$("bkModal").hidden=true;paint();showV("");modal.hidden=false;});
 })();
+</script>
+<script>
+(function(){
+  var nav=document.getElementById("gNav");if(!nav){return;}
+  var T={gApp:"Guide de l’application et SCI",gUE:"Règlement (UE) 2018/848",gUS:"USDA NOP (7 CFR 205)",gInt:"Intrants autorisés",g5M:"Méthode 5M (risques)",gGrp:"Intégrer un groupement"};
+  [].forEach.call(nav.querySelectorAll("button"),function(b){b.addEventListener("click",function(){
+    var g=b.getAttribute("data-g");
+    Object.keys(T).forEach(function(k){document.getElementById(k).hidden=k!==g;});
+    [].forEach.call(nav.querySelectorAll("button"),function(x){x.classList.toggle("on",x===b);});
+    document.getElementById("gTitle").textContent=g==="gApp"?T.gApp:"Agriculture biologique · "+T[g];
+    try{window.scrollTo(0,0);}catch(e){}
+  });});
+})();
+</script>
+<script>
+(function(){var sp=document.getElementById("splash");if(!sp){return;}
+var done=false;function out(){if(done){return;}done=true;sp.classList.add("out");setTimeout(function(){if(sp.parentNode){sp.parentNode.removeChild(sp);}},600);}
+sp.addEventListener("click",out);setTimeout(out,1600);})();
 </script>
 </body>
 </html>
