@@ -1,6 +1,6 @@
 {
-  "name": "Data Collector SCI BLMD",
-  "short_name": "SCI BLMD",
+  "name": "ICS Data Collector",
+  "short_name": "ICS Data Collector",
   "lang": "fr",
   "start_url": "./index.html",
   "scope": "./",
@@ -9,8 +9,23 @@
   "background_color": "#2f7d32",
   "theme_color": "#2f7d32",
   "icons": [
-    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
-    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
-    {"src": "icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
