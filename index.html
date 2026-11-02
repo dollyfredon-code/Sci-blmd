@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" id="vp" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>ICS Data Collector</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#2f7d32">
@@ -130,7 +130,7 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
 #mode .ic{background:transparent;color:var(--text);display:inline-flex;border:none;border-bottom:3px solid transparent;border-radius:0;line-height:1;padding:4px 8px;opacity:.55}
 #mode .ic.on{background:transparent;color:var(--accent);border-bottom-color:var(--accent);opacity:1}
 @media print{@page{size:A4;margin:10mm}body *{visibility:hidden}#fci,#fci *{visibility:visible}#fci{position:absolute;left:0;top:0;width:100%}.noprint{display:none!important}.paper{background:#fff!important;color:#111!important;border:none;padding:0}.paper label,.fs,.foot{color:#444!important}.paper input,.paper select{background:#fff!important;color:#111!important;border:none;border-bottom:1px solid #000;border-radius:0;padding:1px 0;font-size:10px;-webkit-appearance:none;appearance:none}.fh>div{background:#fff!important;border:1px solid #333;border-radius:0}.bar,.th{background:#333!important;color:#fff!important;border-radius:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}.tg{border:1px solid #333;border-radius:0;min-width:0}.td{border-top:1px solid #999}.tw{overflow:visible}}
-body[data-mode]::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:var(--text);opacity:.36;-webkit-mask:url(fond-traits.png) center/cover no-repeat;mask:url(fond-traits.png) center/cover no-repeat}
+body[data-mode]::before{content:"";position:fixed;inset:0;z-index:-1;transform-origin:0 0;transform:translate(var(--bgx,0px),var(--bgy,0px)) scale(var(--bgs,1));pointer-events:none;background:var(--text);opacity:.36;-webkit-mask:url(fond-traits.png) center/cover no-repeat;mask:url(fond-traits.png) center/cover no-repeat}
 @media print{body[data-mode]::before{display:none}}
 .mrow{display:flex;align-items:center;gap:14px;width:100%;margin-top:8px;padding:13px 12px;text-align:left;font-size:1rem;background:transparent;border:1px solid var(--border);border-radius:var(--rad2,10px);color:var(--text)}
 .mrow svg{flex:0 0 auto;color:var(--accent)}
@@ -1299,7 +1299,7 @@ body[data-mode="list"] h1,body[data-mode="fiches"] h1{padding-left:40px}
     if(!set(RK,JSON.stringify(a))){say("Enregistrement impossible (stockage plein ou indisponible).");return false;}return true;}
   function keepCur(){if(get(AK)||name()!=="Sans nom"){saveCur();}}
   function openRec(r,to){keepCur();K.forEach(function(k){set(k,r.d&&r.d[k]);});set(AK,r.id);set(LK,"1");set("sciblmd-goto",to||"est");location.reload();}
-  function delRec(id){set(RK,JSON.stringify(recs().filter(function(x){return x.id!==id;})));if(get(AK)===id){set(AK,null);set(LK,null);locked=false;}render();}
+  function delRec(id){recs().forEach(function(x){if(x.id===id){tombAdd(x);}});set(RK,JSON.stringify(recs().filter(function(x){return x.id!==id;})));if(get(AK)===id){set(AK,null);set(LK,null);locked=false;}render();}
   function render(){var L=$("bkList");L.innerHTML="";
     recs().slice().reverse().forEach(function(r){
       var it=mk("div"),row=mk("button","rec"),ch=mk("div","tools"),o=mk("button",null,"Ouvrir"),d=mk("button","del","Effacer");
@@ -1410,7 +1410,29 @@ body[data-mode="list"] h1,body[data-mode="fiches"] h1{padding-left:40px}
     keepCur();var a=recs();
     if(!a.length){say("Aucun dossier enregistré à sauvegarder.");return;}
     var ts=new Date().toISOString();
-    out("Sauvegarde_SCI_BLMD_"+ts.slice(0,10)+".json","application/json",JSON.stringify({app:"sciblmd",v:1,ts:ts,records:a}),function(){set(LBK,ts);bkInfoAll();});
+    out("Sauvegarde_SCI_BLMD_"+ts.slice(0,10)+".json","application/json",JSON.stringify({app:"sciblmd",v:2,ts:ts,records:a,deleted:tombs()}),function(){set(LBK,ts);bkInfoAll();});
+  }
+  var TK="sciblmd-deleted-v1";
+  function ckey(r){var c="";try{var h=JSON.parse((r.d&&r.d[K[1]])||"{}")||{};c=String(h.code||"").trim().toLowerCase();}catch(e){}return c?"c:"+c:"i:"+r.id;}
+  function tombs(){try{var o=JSON.parse(get(TK)||"{}");return o&&typeof o==="object"&&!Array.isArray(o)?o:{};}catch(e){return {};}}
+  function tombAdd(r){var t=tombs();t[ckey(r)]=new Date().toISOString();set(TK,JSON.stringify(t));}
+  /* Fusionne des dossiers reçus (fichier ou Google Drive) : un producteur = un code ; le plus récent gagne ; une suppression plus récente l'emporte. */
+  function mergeIn(list,remoteTombs){
+    var t=tombs(),k;
+    if(remoteTombs&&typeof remoteTombs==="object"){for(k in remoteTombs){if(typeof remoteTombs[k]==="string"&&remoteTombs[k]>String(t[k]||"")){t[k]=remoteTombs[k];}}}
+    var cur=recs(),by={},add=0,upd=0,skip=0,rem=0;
+    cur.forEach(function(x){by[ckey(x)]=x;});
+    (list||[]).forEach(function(raw){
+      var r=cleanRec(raw);if(!r){skip++;return;}
+      var key=ckey(r);if(t[key]&&r.ts<=t[key]){return;}
+      var ex=by[key];
+      if(!ex){cur.push(r);by[key]=r;add++;}
+      else if(ex.id!==get(AK)&&r.ts>String(ex.ts||"")){r.id=ex.id;cur[cur.indexOf(ex)]=r;by[key]=r;upd++;}
+    });
+    var act=get(AK);
+    cur=cur.filter(function(x){var key=ckey(x);if(t[key]&&String(x.ts||"")<=t[key]&&x.id!==act){rem++;return false;}return true;});
+    set(TK,JSON.stringify(t));
+    return {cur:cur,add:add,upd:upd,skip:skip,rem:rem};
   }
   function cleanRec(r){
     if(!r||typeof r!=="object"||!r.id||!r.d||typeof r.d!=="object"){return null;}
@@ -1428,13 +1450,7 @@ body[data-mode="list"] h1,body[data-mode="fiches"] h1{padding-left:40px}
     fr.onload=function(){
       var o=null;try{o=JSON.parse(String(fr.result));}catch(e){}
       if(!o||o.app!=="sciblmd"||!Array.isArray(o.records)){say("Fichier non reconnu : choisis un fichier « Sauvegarde_SCI_BLMD_….json ».");return;}
-      var cur=recs(),by={},add=0,upd=0,skip=0;cur.forEach(function(x){by[x.id]=x;});
-      o.records.forEach(function(raw){
-        var r=cleanRec(raw);if(!r){skip++;return;}
-        var ex=by[r.id];
-        if(!ex){cur.push(r);by[r.id]=r;add++;}
-        else if(r.id!==get(AK)&&r.ts>String(ex.ts||"")){cur[cur.indexOf(ex)]=r;by[r.id]=r;upd++;}
-      });
+      var M=mergeIn(o.records,o.deleted),cur=M.cur,add=M.add,upd=M.upd,skip=M.skip;
       if(!set(RK,JSON.stringify(cur))){say("Importation impossible (stockage plein ou indisponible).");return;}
       render();
       say("Importation terminée : "+add+" ajouté(s), "+upd+" mis à jour"+(skip?", "+skip+" ignoré(s) (invalides)":"")+".");
@@ -1448,6 +1464,96 @@ body[data-mode="list"] h1,body[data-mode="fiches"] h1{padding-left:40px}
     b1.addEventListener("click",backupAll);b2.addEventListener("click",function(){fi.click();});
     fi.addEventListener("change",function(){var f=fi.files&&fi.files[0];if(f){importAll(f);}fi.value="";});
     T2.appendChild(b1);T2.appendChild(b2);T2.appendChild(fi);
+  }
+
+  /* ===== Compte Google : synchronisation dans un espace caché de Google Drive ===== */
+  var GCID="506540443488-4ekecqehq1fenjfg988mcdfvkri4aad0.apps.googleusercontent.com";  /* colle ici l'ID client Google une fois créé ; sinon l'application le demande dans le menu */
+  var GK="sciblmd-google-id",GS="sciblmd-google-on",GL="sciblmd-google-last",GSCOPE="https://www.googleapis.com/auth/drive.appdata",GFILE="sciblmd-sync.json";
+  var gTok=null,gClient=null,gBusy=false;
+  function gid(){return GCID||get(GK)||"";}
+  function gmsg(t,bad){var el=$("gStat");if(el){el.textContent=t;el.style.color=bad?"var(--danger)":"";}}
+  function gLoad(cb){
+    if(window.google&&google.accounts&&google.accounts.oauth2){cb(null);return;}
+    if(!navigator.onLine){cb("Pas de connexion internet.");return;}
+    var sc=document.createElement("script");sc.src="https://accounts.google.com/gsi/client";sc.async=true;
+    sc.onload=function(){cb(window.google&&google.accounts&&google.accounts.oauth2?null:"Service Google indisponible.");};
+    sc.onerror=function(){cb("Impossible de joindre Google. Vérifie ta connexion.");};
+    document.head.appendChild(sc);}
+  function gToken(select,cb){
+    gLoad(function(err){
+      if(err){cb(err);return;}
+      try{
+        gClient=google.accounts.oauth2.initTokenClient({client_id:gid(),scope:GSCOPE,
+          callback:function(r){if(r&&r.access_token){gTok=r.access_token;set(GS,"1");cb(null,r.access_token);}else{cb("Connexion refusée ou annulée.");}},
+          error_callback:function(e){cb("Connexion annulée ou bloquée ("+((e&&e.type)||"erreur")+").");}});
+        gClient.requestAccessToken({prompt:select?"select_account":""});
+      }catch(e){cb("Connexion Google impossible : "+e.message);}});}
+  function gApi(url,opt,cb){
+    opt=opt||{};opt.headers=opt.headers||{};opt.headers.Authorization="Bearer "+gTok;
+    fetch(url,opt).then(function(r){
+      if(!r.ok){throw new Error("Google a répondu "+r.status);}
+      return opt.raw?r.text():r.json();}).then(function(d){cb(null,d);},function(e){cb(e.message||"Erreur réseau.");});}
+  function gSync(select){
+    if(gBusy){return;}
+    if(!gid()){gmsg("Colle d'abord l'ID client Google ci-dessous.",true);return;}
+    keepCur();gBusy=true;gmsg("Connexion à Google…");
+    function fin(m,bad){gBusy=false;gmsg(m,bad);gUi();}
+    gToken(select,function(err){
+      if(err){fin(err,true);return;}
+      gmsg("Lecture de ton Drive…");
+      gApi("https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q="+encodeURIComponent("name='"+GFILE+"'")+"&fields=files(id)",{},function(e1,d){
+        if(e1){fin("Lecture impossible : "+e1,true);return;}
+        var fid=d.files&&d.files[0]?d.files[0].id:null;
+        function suite(remote){
+          var M=mergeIn(remote&&remote.records,remote&&remote.deleted);
+          if(!set(RK,JSON.stringify(M.cur))){fin("Stockage plein : synchronisation annulée.",true);return;}
+          render();
+          var ts=new Date().toISOString(),body=JSON.stringify({app:"sciblmd",v:2,ts:ts,records:M.cur,deleted:tombs()});
+          gmsg("Envoi vers ton Drive…");
+          function ok(){set(GL,ts);set(LBK,ts);fin("Synchronisé : "+M.add+" reçu(s), "+M.upd+" mis à jour"+(M.rem?", "+M.rem+" supprimé(s)":"")+". "+M.cur.length+" dossier(s) au total.",false);bkInfoAll();}
+          if(fid){gApi("https://www.googleapis.com/upload/drive/v3/files/"+fid+"?uploadType=media",{method:"PATCH",headers:{"Content-Type":"application/json"},body:body},function(e3){e3?fin("Envoi impossible : "+e3,true):ok();});}
+          else{
+            var bd="sciblmdbd",meta=JSON.stringify({name:GFILE,parents:["appDataFolder"]}),
+              mp="--"+bd+"\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n"+meta+"\r\n--"+bd+"\r\nContent-Type: application/json\r\n\r\n"+body+"\r\n--"+bd+"--";
+            gApi("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",{method:"POST",headers:{"Content-Type":"multipart/related; boundary="+bd},body:mp},function(e3){e3?fin("Envoi impossible : "+e3,true):ok();});}}
+        if(!fid){suite(null);return;}
+        gApi("https://www.googleapis.com/drive/v3/files/"+fid+"?alt=media",{raw:true},function(e2,txt){
+          if(e2){fin("Lecture impossible : "+e2,true);return;}
+          var o=null;try{o=JSON.parse(txt);}catch(x){}
+          if(!o||o.app!=="sciblmd"||!Array.isArray(o.records)){fin("Le fichier sur ton Drive n'est pas reconnu : rien n'a été modifié.",true);return;}
+          suite(o);});});});}
+  function gOut(){
+    var t=gTok;gTok=null;set(GS,null);
+    if(t&&window.google&&google.accounts&&google.accounts.oauth2){try{google.accounts.oauth2.revoke(t,function(){});}catch(e){}}
+    gmsg("Compte déconnecté. Tes dossiers restent dans ce téléphone.");gUi();}
+  var gB1,gB2,gIn,gSv;
+  function gUi(){
+    if(!gB1){return;}
+    var on=get(GS)==="1",last=get(GL),d=last?new Date(last):null;
+    gB1.textContent=on?"Synchroniser maintenant":"Se connecter avec Google";
+    gB2.hidden=!on;
+    gB2.textContent="Changer de compte";gOff.hidden=!on;
+    gIn.hidden=!!GCID;gSv.hidden=!!GCID;
+    if(!$("gStat").textContent||$("gStat").dataset.init!=="1"){
+      $("gStat").dataset.init="1";
+      gmsg(on?("Connecté à Google."+(d&&!isNaN(d.getTime())?" Dernière synchronisation : "+d.toLocaleString("fr-FR")+".":"")):"Non connecté. Tes dossiers sont seulement dans ce téléphone.");}}
+  var gOff;
+  var T3=$("bkAllTools");
+  if(T3){
+    var gBox=mk("div");gBox.style.cssText="width:100%;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)";
+    var gT=mk("div",null,"Compte Google");gT.style.fontWeight="700";
+    var gSt=mk("p","sub");gSt.id="gStat";gSt.style.margin="6px 0";gSt.setAttribute("role","status");
+    gB1=mk("button",null,"Se connecter avec Google");gB2=mk("button",null,"Changer de compte");gOff=mk("button",null,"Déconnecter");
+    gB1.type=gB2.type=gOff.type="button";
+    gIn=mk("input");gIn.type="text";gIn.placeholder="ID client Google (xxxx.apps.googleusercontent.com)";gIn.value=get(GK)||"";
+    gIn.style.cssText="width:100%;box-sizing:border-box;padding:8px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);margin-top:6px";
+    gSv=mk("button",null,"Enregistrer l’ID client");gSv.type="button";
+    gB1.addEventListener("click",function(){gSync(false);});
+    gB2.addEventListener("click",function(){gSync(true);});
+    gOff.addEventListener("click",gOut);
+    gSv.addEventListener("click",function(){var v=gIn.value.trim();set(GK,v||null);gmsg(v?"ID client enregistré. Tu peux te connecter.":"ID client effacé.");});
+    gBox.appendChild(gT);gBox.appendChild(gSt);gBox.appendChild(gB1);gBox.appendChild(gB2);gBox.appendChild(gOff);gBox.appendChild(gIn);gBox.appendChild(gSv);
+    T3.parentNode.insertBefore(gBox,T3.nextSibling);gUi();
   }
   function bkClose(){$("bkModal").hidden=true;}
   $("mBk").addEventListener("click",function(){$("mnBkBox").hidden=true;$("bkAllOut").hidden=true;$("bkModal").hidden=false;});
@@ -1826,6 +1932,48 @@ var G={"gInt":{"en":["Permitted inputs in organic", "Insecticides, treatments an
 (function(){var sp=document.getElementById("splash");if(!sp){return;}
 var done=false;function out(){if(done){return;}done=true;sp.classList.add("out");setTimeout(function(){if(sp.parentNode){sp.parentNode.removeChild(sp);}},600);}
 sp.addEventListener("click",out);setTimeout(out,1600);})();
+</script>
+<script>
+/* Zoom autorisé seulement dans le guide, le calcul, la fiche et les tableaux ouverts ;
+   le fond de dessin et les boutons fixes ne grossissent jamais. */
+(function(){
+  var vp=document.getElementById("vp"),b=document.body,de=document.documentElement,vv=window.visualViewport;
+  var NO="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover";
+  var YES="width=device-width, initial-scale=1, viewport-fit=cover";
+  var FIXES=["mBack","mBk","mLock","mHome","mList","mBook","mEst","mFci"];
+  function fixes(){return FIXES.map(function(id){return document.getElementById(id);}).filter(Boolean);}
+  function tableOuverte(){
+    var h=document.getElementById("home");if(!h||h.hidden){return false;}
+    var t=h.querySelectorAll(".tw");
+    for(var i=0;i<t.length;i++){if(t[i].offsetParent!==null){return true;}}
+    return false;
+  }
+  function fond(){
+    var sc=vv?vv.scale:1,els=fixes(),i;
+    if(!vv||sc<=1.001){
+      de.style.removeProperty("--bgx");de.style.removeProperty("--bgy");de.style.removeProperty("--bgs");
+      for(i=0;i<els.length;i++){els[i].style.transform="";els[i].style.transformOrigin="";}
+      return;
+    }
+    de.style.setProperty("--bgx",vv.offsetLeft+"px");de.style.setProperty("--bgy",vv.offsetTop+"px");de.style.setProperty("--bgs",String(1/sc));
+    for(i=0;i<els.length;i++){
+      var e=els[i];if(e.offsetParent===null&&getComputedStyle(e).position!=="fixed"){continue;}
+      e.style.transform="";e.style.transformOrigin="0 0";
+      var r=e.getBoundingClientRect(),L=r.left,T=r.top;
+      e.style.transform="translate("+(vv.offsetLeft+L/sc-L)+"px,"+(vv.offsetTop+T/sc-T)+"px) scale("+(1/sc)+")";
+    }
+  }
+  function regle(){
+    var m=b.getAttribute("data-mode"),ok=m==="guide"||m==="est"||m==="fci"||tableOuverte();
+    if(vp){var c=ok?YES:NO;if(vp.getAttribute("content")!==c){vp.setAttribute("content",c);}}
+    fond();
+  }
+  if(vv){vv.addEventListener("resize",fond);vv.addEventListener("scroll",fond);}
+  new MutationObserver(regle).observe(b,{attributes:true,attributeFilter:["data-mode"]});
+  var ht=document.getElementById("home");
+  if(ht){new MutationObserver(regle).observe(ht,{attributes:true,attributeFilter:["hidden"],subtree:true,childList:true});}
+  regle();
+})();
 </script>
 </body>
 </html>
