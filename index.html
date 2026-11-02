@@ -159,6 +159,11 @@ body[data-mode="list"] h1,body[data-mode="fiches"] h1{padding-left:40px}
   #nav #mList{bottom:auto;top:calc(var(--bgh,100vh) - 16px);transform:translate(-50%,-100%)}
   #nav .circ,#nav #mBook{bottom:auto;top:calc(var(--bgh,100vh) - 80px);transform:translateY(-100%)}
 }
+/* Même chose quand le plein écran est demandé après l'ouverture (premier toucher) */
+html.isfs{--sat:24px;--sab:0px}
+html.isfs #nav #mHome,html.isfs #nav #mFci{bottom:auto;top:calc(var(--bgh,100vh) - 16px);transform:translateY(-100%)}
+html.isfs #nav #mList{bottom:auto;top:calc(var(--bgh,100vh) - 16px);transform:translate(-50%,-100%)}
+html.isfs #nav .circ,html.isfs #nav #mBook{bottom:auto;top:calc(var(--bgh,100vh) - 80px);transform:translateY(-100%)}
 </style>
 <script>
 (function(){
@@ -2094,6 +2099,34 @@ sp.addEventListener("click",out);setTimeout(out,1600);})();
 })();
 </script>
 <script>
+/* Plein écran : l'appli s'ouvre en affichage normal ; le plein écran est demandé au premier toucher, une fois l'accueil affiché.
+   Le bouton retour quitte d'abord le plein écran. Une seule demande par ouverture (après un retour, il n'est pas redemandé). */
+(function(){
+  var de=document.documentElement,tried=false,busy=false;
+  function el(){return document.fullscreenElement||document.webkitFullscreenElement||null;}
+  function sync(){if(el()){de.classList.add("isfs");}else{de.classList.remove("isfs");}}
+  ["fullscreenchange","webkitfullscreenchange"].forEach(function(ev){document.addEventListener(ev,sync);});
+  function pret(){var sp=document.getElementById("splash");return !sp||sp.classList.contains("out");}
+  function demander(){
+    if(tried||busy||el()||!pret()){return;}
+    var r=de.requestFullscreen||de.webkitRequestFullscreen;
+    if(!r){tried=true;return;}
+    busy=true;
+    try{
+      var p=r.call(de,{navigationUI:"hide"});
+      if(p&&p.then){p.then(function(){tried=true;busy=false;sync();},function(){busy=false;});}
+      else{tried=true;busy=false;}
+    }catch(e){busy=false;}
+  }
+  ["pointerup","touchend","click"].forEach(function(ev){document.addEventListener(ev,demander,{capture:true,passive:true});});
+  window.SCIFS={exit:function(){
+    if(!el()){return false;}
+    try{(document.exitFullscreen||document.webkitExitFullscreen).call(document);}catch(e){}
+    return true;
+  }};
+})();
+</script>
+<script>
 (function(){
   function $(i){return document.getElementById(i);}
   function vis(id){var e=$(id);return !!e&&!e.hidden;}
@@ -2128,6 +2161,7 @@ sp.addEventListener("click",out);setTimeout(out,1600);})();
   window.addEventListener("popstate",function(e){
     var st=e.state;
     if(!(st&&st.sci==="base")){return;}
+    if(window.SCIFS&&window.SCIFS.exit()){untoast();guard();return;}
     if(handleBack()){untoast();guard();return;}
     var now=Date.now();
     if(now-last<2000){untoast();last=0;try{history.back();}catch(x){}try{window.close();}catch(x){}return;}
