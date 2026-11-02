@@ -57,6 +57,7 @@ html.noframe .card:not(.result),html.noframe .paper{background:transparent;borde
 .fm b{display:block;font-size:.78rem;color:var(--muted);font-weight:600;margin-bottom:2px}
 .ex{color:var(--muted);font-size:.85rem}
 .rec{display:flex;align-items:center;gap:8px;width:100%;text-align:left;margin-top:8px}
+#mpModal{position:fixed;inset:0;z-index:56;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}
 #pwModal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}
 .pwbox{background:var(--card);border:1px solid var(--border);border-radius:var(--rad,14px);padding:16px;width:100%;max-width:360px}
 h1{font-size:1.3rem;margin:0 0 14px;padding-right:96px}
@@ -887,14 +888,16 @@ body[data-mode="list"] h1,body[data-mode="fiches"] h1{padding-left:40px}
 </nav>
 <button type="button" id="mBack" class="noprint" aria-label="Retour" title="Retour" hidden><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H5"/><path d="M11 5.5 4.5 12 11 18.5"/></svg></button>
 <button type="button" id="mBk" class="noprint" aria-label="Sauvegarde" title="Sauvegarde" hidden><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="6.5" r="2.8"/><circle cx="6.2" cy="17" r="2.8"/><circle cx="17.8" cy="17" r="2.8"/></svg></button>
-<div id="bkModal" class="noprint" hidden><div class="pwbox" role="dialog" aria-modal="true" aria-labelledby="bkT" style="max-height:88vh;overflow:auto"><div class="head"><h2 id="bkT">Menu</h2><button type="button" id="bkX" aria-label="Fermer">✕</button></div><button type="button" class="mrow" id="mnSet"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Paramètres</span><svg class="chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button><button type="button" class="mrow" id="mnBk"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4"/><path d="M8 20v-6h8v6"/></svg><span>Sauvegardes</span><svg class="chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button><div id="mnBkBox" hidden><p class="sub" id="bkAllInfo" style="margin:10px 0 0"></p><div class="tools" id="bkAllTools"></div><div id="bkAllOut" hidden><label for="bkAllTa">Si le téléchargement n’a pas démarré, copie ce texte et colle-le dans une note ou un message.</label><textarea id="bkAllTa" rows="6" readonly style="width:100%;font:.8rem monospace;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:8px"></textarea></div></div><button type="button" class="mrow" id="mnGuide"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.5 5 8 4.5 4 4.5v13c4 0 6.5.5 8 2 1.5-1.5 4-2 8-2v-13c-4 0-6.5.5-8 2z"/><path d="M12 6.5v13"/></svg><span>Guide de l’application</span><svg class="chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div></div>
+<div id="bkModal" class="noprint" hidden><div class="pwbox" role="dialog" aria-modal="true" aria-labelledby="bkT" style="max-height:88vh;overflow:auto"><div class="head"><h2 id="bkT">Menu</h2><button type="button" id="bkX" aria-label="Fermer">✕</button></div><button type="button" class="mrow" id="mnSet"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Police et couleurs</span><svg class="chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button><button type="button" class="mrow" id="mnPw"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9"/><path d="M16 7l3 3"/><path d="M14 9l2 2"/></svg><span>Mot de passe</span><svg class="chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button><button type="button" class="mrow" id="mnBk"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4"/><path d="M8 20v-6h8v6"/></svg><span>Sauvegardes</span><svg class="chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button><div id="mnBkBox" hidden><p class="sub" id="bkAllInfo" style="margin:10px 0 0"></p><div class="tools" id="bkAllTools"></div><div id="bkAllOut" hidden><label for="bkAllTa">Si le téléchargement n’a pas démarré, copie ce texte et colle-le dans une note ou un message.</label><textarea id="bkAllTa" rows="6" readonly style="width:100%;font:.8rem monospace;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:8px"></textarea></div></div><button type="button" class="mrow" id="mnLang"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg><span>Langue</span><svg class="chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button><button type="button" class="mrow" id="mnGuide"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.5 5 8 4.5 4 4.5v13c4 0 6.5.5 8 2 1.5-1.5 4-2 8-2v-13c-4 0-6.5.5-8 2z"/><path d="M12 6.5v13"/></svg><span>Guide de l’application</span><svg class="chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div></div>
 <div id="pwModal" class="noprint" hidden>
   <div class="pwbox" role="dialog" aria-modal="true" aria-labelledby="pwT">
     <h2 id="pwT"></h2>
     <p class="sub" id="pwD" style="margin:6px 0 0"></p>
     <div class="fld"><label for="pw1">Mot de passe</label><input id="pw1" type="password" autocomplete="off"></div>
     <div class="fld" id="pw2w"><label for="pw2">Confirmer le mot de passe</label><input id="pw2" type="password" autocomplete="off"></div>
+    <div id="pqw" hidden><div class="fld"><label for="pwq">Question personnelle (pour retrouver ton accès si tu oublies)</label><input id="pwq" type="text" autocomplete="off" placeholder="Ex. : Nom de mon premier village ?"></div><div class="fld"><label for="pwa">Réponse à cette question</label><input id="pwa" type="text" autocomplete="off"></div></div>
     <p class="err" id="pwE" hidden></p>
+    <button type="button" id="pwForgot" class="thback" hidden>Mot de passe oublié ?</button>
     <div class="tools"><button type="button" id="pwOk" class="main" style="margin-top:0;width:auto">Valider</button><button type="button" id="pwNo">Annuler</button></div>
   </div>
 </div>
@@ -1258,7 +1261,14 @@ body[data-mode="list"] h1,body[data-mode="fiches"] h1{padding-left:40px}
     root.appendChild(paper);window.sciLink(paper,"g");
   }
 
-  function mode(m){var map={home:"mHome",list:"mList",est:"mEst",fci:"mFci",fiches:"mFci",guide:"mList"};$("guide").hidden=m!=="guide";$("home").hidden=m!=="home";$("fiches").hidden=m!=="fiches";$("list").hidden=m!=="list";document.body.setAttribute("data-mode",m);$("estim").hidden=m!=="est";root.hidden=m!=="fci";$("backup").hidden=m==="home"||m==="list"||m==="fiches"||m==="guide";$("mEst").hidden=m!=="list";$("mBk").hidden=!(m==="home"||m==="list"||m==="fiches");$("mBack").hidden=!(m==="est"||m==="fci"||m==="guide");$("bkModal").hidden=true;$("mBook").hidden=m!=="home";["mHome","mList","mEst","mFci","mBook"].forEach(function(id){$(id).classList.toggle("on",id===map[m]);});try{window.scrollTo(0,0);}catch(e){}}
+  var navStack=[],navBack=false;
+  function mode(m){var prevM=document.body.getAttribute("data-mode");if(!navBack&&prevM&&prevM!==m){if(m==="home"){navStack=[];}else{navStack.push(prevM);if(navStack.length>20){navStack.shift();}}}var map={home:"mHome",list:"mList",est:"mEst",fci:"mFci",fiches:"mFci",guide:"mList"};$("guide").hidden=m!=="guide";$("home").hidden=m!=="home";$("fiches").hidden=m!=="fiches";$("list").hidden=m!=="list";document.body.setAttribute("data-mode",m);$("estim").hidden=m!=="est";root.hidden=m!=="fci";$("backup").hidden=m==="home"||m==="list"||m==="fiches"||m==="guide";$("mEst").hidden=m!=="list";$("mBk").hidden=!(m==="home"||m==="list"||m==="fiches");$("mBack").hidden=!(m==="est"||m==="fci"||m==="guide");$("bkModal").hidden=true;$("mBook").hidden=m!=="home";["mHome","mList","mEst","mFci","mBook"].forEach(function(id){$(id).classList.toggle("on",id===map[m]);});try{window.scrollTo(0,0);}catch(e){}}
+  window.SCINAV={backMode:function(){
+    var cur=document.body.getAttribute("data-mode");
+    if(cur==="est"&&inP){inP=false;goP();return true;}
+    if(navStack.length){navBack=true;try{mode(navStack.pop());}finally{navBack=false;}return true;}
+    if(cur&&cur!=="home"){navBack=true;try{mode("home");}finally{navBack=false;}return true;}
+    return false;}};
   $("mEst").addEventListener("click",function(){if((!$("home").hidden||!$("list").hidden||!$("guide").hidden)&&window.SCI){window.SCI.fresh();return;}mode("est");});
   $("mBook").addEventListener("click",function(){mode("guide");});
   $("mnGuide").addEventListener("click",function(){$("bkModal").hidden=true;mode("guide");});
@@ -1371,22 +1381,91 @@ body[data-mode="list"] h1,body[data-mode="fiches"] h1{padding-left:40px}
       tl.appendChild(eb);card.appendChild(tl);C.appendChild(outer);
     });
   }
-  var PK="sciblmd-pw",pwCb=null,pwMode="ask";
+  var PK="sciblmd-pw",pwCb=null,pwMode="ask",pwForce=false,QK="sciblmd-pwq",QA="sciblmd-pwa";
   var LOCK='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
   function hashPw(p){var t="sciblmd|"+p,h1=0xdeadbeef,h2=0x41c6ce57;for(var i=0;i<t.length;i++){var c=t.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677);}
     h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return String(4294967296*(2097151&h2)+(h1>>>0));}
+  function normA(t){return String(t||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g," ").trim();}
+  function hashA(t){return hashPw("rep|"+normA(t));}
   function pwErr(t){$("pwE").textContent=t;$("pwE").hidden=false;}
-  function pwClose(){$("pwModal").hidden=true;pwCb=null;}
-  function pwOpen(mode,title,desc,cb){pwMode=mode;pwCb=cb;$("pwT").textContent=title;$("pwD").textContent=desc;$("pw1").value="";$("pw2").value="";$("pw2w").hidden=mode!=="new";$("pwE").hidden=true;$("pwModal").hidden=false;$("pw1").focus();}
+  function pwClose(){$("pwModal").hidden=true;pwCb=null;pwForce=false;}
+  function pwOpen(mode,title,desc,cb){pwMode=mode;pwCb=cb;$("pwT").textContent=title;$("pwD").textContent=desc;$("pw1").value="";$("pw2").value="";$("pw2w").hidden=mode!=="new";$("pqw").hidden=mode!=="new";$("pwq").value="";$("pwa").value="";$("pwForgot").hidden=mode!=="ask";$("pwE").hidden=true;$("pwNo").hidden=!!pwForce;$("pwModal").hidden=false;$("pw1").focus();}
   function needPw(cb){if(!get(PK)){pwOpen("new","Crée un mot de passe","Il protège tous les dossiers enregistrés contre une modification par erreur. Garde-le bien : il ne peut pas être récupéré.",cb);}
     else{pwOpen("ask","Mot de passe requis","Entre le mot de passe pour modifier ce dossier.",cb);}}
   function ensurePw(cb){if(get(PK)){cb();}else{needPw(cb);}}
   $("pwNo").addEventListener("click",pwClose);
   $("pwOk").addEventListener("click",function(){var a=$("pw1").value;
-    if(pwMode==="new"){if(a.length<4){pwErr("4 caractères minimum.");return;}if(a!==$("pw2").value){pwErr("Les deux mots de passe sont différents.");return;}set(PK,hashPw(a));}
+    if(pwMode==="new"){if(a.length<4){pwErr("4 caractères minimum.");return;}if(a!==$("pw2").value){pwErr("Les deux mots de passe sont différents.");return;}var q=$("pwq").value.trim();if(q.length<5){pwErr("Écris ta question personnelle (5 caractères minimum).");return;}if(normA($("pwa").value).length<2){pwErr("Écris la réponse à ta question.");return;}set(QK,q);set(QA,hashA($("pwa").value));set(PK,hashPw(a));}
     else if(hashPw(a)!==get(PK)){pwErr("Mot de passe incorrect.");return;}
     var f=pwCb;pwClose();if(f){f();}});
-  ["pw1","pw2"].forEach(function(id){$(id).addEventListener("keydown",function(e){if(e.key==="Enter"){$("pwOk").click();}});});
+
+  // ===== Menu « Mot de passe » : changer, question personnelle, mot de passe oublié =====
+  var mp=mk("div");mp.id="mpModal";mp.className="noprint";mp.hidden=true;
+  var CH='<svg class="chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+  function fl(id,lab,type,ph){return '<div class="fld" style="margin-top:10px"><label for="'+id+'">'+lab+'</label><input id="'+id+'" type="'+type+'" autocomplete="off"'+(ph?' placeholder="'+ph+'"':'')+'></div>';}
+  mp.innerHTML='<div class="pwbox" role="dialog" aria-modal="true" aria-labelledby="mpT" style="max-height:88vh;overflow:auto">'
+   +'<div class="head"><h2 id="mpT">Mot de passe</h2><button type="button" id="mpX" aria-label="Fermer">✕</button></div>'
+   +'<div id="mpMain"><button type="button" class="thback" id="mpMenu">‹ Menu</button>'
+   +'<button type="button" class="mrow" data-mp="mpChange"><span>Changer le mot de passe</span>'+CH+'</button>'
+   +'<button type="button" class="mrow" data-mp="mpForgot"><span>Mot de passe oublié</span>'+CH+'</button>'
+   +'<p class="sub" id="mpInfo" style="margin:12px 0 0"></p></div>'
+   +'<div class="mpv" id="mpChange" hidden><button type="button" class="thback">‹ Mot de passe</button>'
+   +fl("mpC0","Mot de passe actuel","password")+fl("mpC1","Nouveau mot de passe (laisse vide pour garder l’actuel)","password")+fl("mpC2","Confirmer le nouveau mot de passe","password")+fl("mpCq","Question personnelle (pour retrouver ton accès si tu oublies)","text","Ex. : Nom de mon premier village ?")+fl("mpCa","Réponse à cette question","text")
+   +'<p class="err" id="mpCE" hidden></p><div class="tools"><button type="button" class="main" id="mpCOk" style="margin-top:12px;width:auto">Valider</button></div></div>'
+   +'<div class="mpv" id="mpForgot" hidden><button type="button" class="thback">‹ Mot de passe</button>'
+   +'<p class="sub" id="mpFd" style="margin:8px 0 0"></p><div id="mpFw">'
+   +'<p id="mpFq" style="margin:10px 0 0;font-weight:600"></p>'
+   +fl("mpFa","Ta réponse","text")+fl("mpF1","Nouveau mot de passe (4 caractères minimum)","password")+fl("mpF2","Confirmer le nouveau mot de passe","password")
+   +'<p class="err" id="mpFE" hidden></p><div class="tools"><button type="button" class="main" id="mpFOk" style="margin-top:12px;width:auto">Réinitialiser</button></div></div></div>'
+   +'</div>';
+  document.body.appendChild(mp);
+  var MPV=["mpMain","mpChange","mpForgot"],MPT={mpMain:"Mot de passe",mpChange:"Changer le mot de passe",mpForgot:"Mot de passe oublié"};
+  function mpErr(id,t){var e=$(id);e.textContent=t;e.hidden=!t;}
+  function mpView(v){
+    MPV.forEach(function(id){$(id).hidden=id!==v;});$("mpT").textContent=MPT[v];
+    ["mpCE","mpFE"].forEach(function(id){mpErr(id,"");});
+    ["mpC0","mpC1","mpC2","mpCa","mpFa","mpF1","mpF2"].forEach(function(id){$(id).value="";});
+    if(v==="mpMain"){$("mpInfo").textContent=get(QK)?"Question personnelle définie : « "+get(QK)+" »":"Aucune question personnelle n’est définie. Définis-en une dans « Changer le mot de passe » pour pouvoir réinitialiser ton mot de passe en cas d’oubli.";}
+    if(v==="mpChange"){$("mpCq").value=get(QK)||"";document.querySelector('label[for="mpCa"]').textContent=get(QK)?"Réponse (laisse vide pour garder l’actuelle)":"Réponse à cette question";}
+    if(v==="mpForgot"){var q=get(QK);$("mpFw").hidden=!q;$("mpFq").textContent=q||"";
+      $("mpFd").textContent=q?"Réponds à ta question personnelle pour choisir un nouveau mot de passe. Tes dossiers ne sont pas effacés.":"Aucune question personnelle n’a été définie : la réinitialisation n’est pas possible. Si tu connais encore ton mot de passe, définis d’abord une question dans « Changer le mot de passe ».";}
+  }
+  function mpOpen(v){$("bkModal").hidden=true;mp.hidden=false;mpView(v||"mpMain");}
+  function mpToMenu(){mp.hidden=true;$("mnBkBox").hidden=true;$("bkAllOut").hidden=true;$("bkModal").hidden=false;}
+  $("mnPw").addEventListener("click",function(){mpOpen("mpMain");});
+  $("mpX").addEventListener("click",function(){mp.hidden=true;});
+  $("mpMenu").addEventListener("click",mpToMenu);
+  [].forEach.call(mp.querySelectorAll("[data-mp]"),function(b){b.addEventListener("click",function(){mpView(b.getAttribute("data-mp"));});});
+  [].forEach.call(mp.querySelectorAll(".mpv .thback"),function(b){b.addEventListener("click",function(){mpView("mpMain");});});
+  mp.addEventListener("click",function(e){if(e.target===mp){mp.hidden=true;}});
+  $("pwForgot").addEventListener("click",function(){pwClose();mpOpen("mpForgot");});
+  function okOld(a){return !get(PK)||hashPw(a)===get(PK);}
+  $("mpCOk").addEventListener("click",function(){
+    if(!okOld($("mpC0").value)){mpErr("mpCE","Mot de passe actuel incorrect.");return;}
+    var n=$("mpC1").value,q=$("mpCq").value.trim(),an=$("mpCa").value,oldQ=get(QK)||"";
+    if(n){if(n.length<4){mpErr("mpCE","4 caractères minimum pour le mot de passe.");return;}
+      if(n!==$("mpC2").value){mpErr("mpCE","Les deux mots de passe sont différents.");return;}}
+    if(q.length<5){mpErr("mpCE","Écris ta question personnelle (5 caractères minimum).");return;}
+    var needA=!oldQ||q!==oldQ;
+    if((needA||an)&&normA(an).length<2){mpErr("mpCE",needA?"Écris la réponse à ta question.":"La réponse est trop courte.");return;}
+    if(!n&&!needA&&!an){mpErr("mpCE","Rien à modifier.");return;}
+    var msg=[];
+    if(n){set(PK,hashPw(n));msg.push("Mot de passe modifié.");}
+    if(needA||an){set(QK,q);set(QA,hashA(an));msg.push("Question personnelle enregistrée.");}
+    mpView("mpMain");$("mpInfo").textContent=msg.join(" ");});
+  var fails=0,blockUntil=0;
+  $("mpFOk").addEventListener("click",function(){
+    var now=Date.now();if(now<blockUntil){mpErr("mpFE","Trop d’essais. Réessaie dans "+Math.ceil((blockUntil-now)/1000)+" secondes.");return;}
+    if(hashA($("mpFa").value)!==get(QA)){fails++;if(fails>=5){fails=0;blockUntil=now+60000;mpErr("mpFE","Trop d’essais. Réessaie dans 1 minute.");}else{mpErr("mpFE","Réponse incorrecte.");}return;}
+    var n=$("mpF1").value;if(n.length<4){mpErr("mpFE","4 caractères minimum.");return;}
+    if(n!==$("mpF2").value){mpErr("mpFE","Les deux mots de passe sont différents.");return;}
+    fails=0;set(PK,hashPw(n));mpView("mpMain");$("mpInfo").textContent="Mot de passe réinitialisé. Utilise le nouveau mot de passe pour tes dossiers.";});
+  ["mpC0","mpC1","mpC2","mpCq","mpCa","mpFa","mpF1","mpF2"].forEach(function(id){$(id).addEventListener("keydown",function(e){if(e.key==="Enter"){var v=MPV.filter(function(x){return !$(x).hidden;})[0];var b={mpChange:"mpCOk",mpForgot:"mpFOk"}[v];if(b){$(b).click();}}});});
+  window.SCIPW={back:function(){
+    if(mp.hidden){return false;}
+    if(!$("mpMain").hidden){mpToMenu();}else{mpView("mpMain");}
+    return true;}};
+  ["pw1","pw2","pwa"].forEach(function(id){$(id).addEventListener("keydown",function(e){if(e.key==="Enter"){$("pwOk").click();}});});
   function out(file,mime,text,done){
     var all=!$("bkModal").hidden;
     function ok(){if(done){done();}}
@@ -1589,7 +1668,8 @@ body[data-mode="list"] h1,body[data-mode="fiches"] h1{padding-left:40px}
   });
   document.body.appendChild(pad);padUp();
   ["pointerdown","mousedown","click","focusin"].forEach(function(n){document.addEventListener(n,guard,true);});
-  if(!set("sciblmd-test","1")){say("Stockage indisponible : les données ne seront pas conservées.");}else{set("sciblmd-test",null);}
+  if(!set("sciblmd-test","1")){say("Stockage indisponible : les données ne seront pas conservées.");}else{set("sciblmd-test",null);
+    if(!get(PK)){pwForce=true;pwOpen("new","Crée ton mot de passe","Ce mot de passe unique protège tous tes fichiers contre une modification par erreur. Garde-le bien : il ne peut pas être récupéré.",null);}}
   render();
   if("serviceWorker" in navigator&&location.protocol.indexOf("http")===0){navigator.serviceWorker.register("sw.js").catch(function(){});}
 })();
@@ -1635,25 +1715,24 @@ body[data-mode="list"] h1,body[data-mode="fiches"] h1{padding-left:40px}
   function trio(h){if(h==="#000000"){return ["#000000","#404040","#808080"];}if(h==="#ffffff"){return ["#ffffff","#e6e6e6","#cccccc"];}return [mixc(h,"#000000",.4),h,mixc(h,"#ffffff",.5)];}
   var CH='<svg class="chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
   var modal=mk("div");modal.id="thModal";modal.className="noprint";modal.hidden=true;
-  modal.innerHTML='<div class="thbox" role="dialog" aria-modal="true" aria-labelledby="thT"><div class="head"><h2 id="thT">Paramètres</h2><button type="button" id="thX" aria-label="Fermer">✕</button></div>'
+  modal.innerHTML='<div class="thbox" role="dialog" aria-modal="true" aria-labelledby="thT"><div class="head"><h2 id="thT">Police et couleurs</h2><button type="button" id="thX" aria-label="Fermer">✕</button></div>'
    +'<div id="thMain"><button type="button" class="thback thmenu">‹ Menu</button>'
    +'<button type="button" class="mrow" data-v="thColors"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.2 0 2-.8 2-1.8 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10.5" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/></svg><span>Couleurs</span>'+CH+'</button>'
    +'<button type="button" class="mrow" data-v="thTheme"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19 8 6l5 13"/><path d="M4.8 14.5h6.4"/><path d="M15 19l3-8 3 8"/><path d="M16 16.5h4"/></svg><span>Thème et taille de police</span>'+CH+'</button>'
    +'<button type="button" class="mrow" data-v="thFont"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5h14"/><path d="M12 5v14"/><path d="M9 19h6"/></svg><span>Style d’écriture</span>'+CH+'</button>'
    +'<button type="button" class="mrow" data-v="thFrame"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="3"/></svg><span>Cadrage</span>'+CH+'</button>'
-   +'<button type="button" class="mrow" data-v="thLang"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg><span>Langue</span>'+CH+'</button>'
    +'<button type="button" class="reset" id="thRs">Réinitialiser les paramètres</button><p class="hint" style="text-align:center;margin-top:14px">ICS Data Collector · Version 2.5</p></div>'
-   +'<div class="thv" id="thColors" hidden><button type="button" class="thback">‹ Paramètres</button>'
+   +'<div class="thv" id="thColors" hidden><button type="button" class="thback">‹ Police et couleurs</button>'
    +'<p class="sec">Couleur principale</p><div class="swg" id="thAcc"></div>'
    +'<p class="sec">Couleur du texte</p><div class="swg" id="thTxt"></div></div>'
-   +'<div class="thv" id="thTheme" hidden><button type="button" class="thback">‹ Paramètres</button>'
+   +'<div class="thv" id="thTheme" hidden><button type="button" class="thback">‹ Police et couleurs</button>'
    +'<p class="sec">Thème</p><div class="tabs" id="thMode"></div>'
    +'<p class="sec">Taille de police : <span id="thFsv"></span></p><input type="range" id="thFs" min="80" max="150" step="5" style="padding:0;border:none;background:transparent"></div>'
-   +'<div class="thv" id="thFont" hidden><button type="button" class="thback">‹ Paramètres</button>'
+   +'<div class="thv" id="thFont" hidden><button type="button" class="thback">‹ Police et couleurs</button>'
    +'<p class="sec">Style d’écriture</p><div id="thFf" style="display:flex;flex-direction:column;gap:8px"></div></div>'
-   +'<div class="thv" id="thLang" hidden><button type="button" class="thback">‹ Paramètres</button>'
+   +'<div class="thv" id="thLang" hidden><button type="button" class="thback">‹ Police et couleurs</button>'
    +'<p class="sec">Langue</p><div class="tabs" id="thLg"><button type="button" class="tab" data-lang="fr">Français</button><button type="button" class="tab" data-lang="en">English</button><button type="button" class="tab" data-lang="mg">Malagasy</button></div></div>'
-   +'<div class="thv" id="thFrame" hidden><button type="button" class="thback">‹ Paramètres</button>'
+   +'<div class="thv" id="thFrame" hidden><button type="button" class="thback">‹ Police et couleurs</button>'
    +'<p class="sec">Cadrage</p><div class="tabs" id="thFr"></div></div></div>';
   document.body.appendChild(modal);
   function seg(id,items,cur,set){var c=$(id);c.innerHTML="";items.forEach(function(it){var b=mk("button","tab"+(cur()===it[0]?" on":""),it[1]);b.type="button";b.addEventListener("click",function(){set(it[0]);apply();save();paint();});c.appendChild(b);});}
@@ -1676,16 +1755,18 @@ body[data-mode="list"] h1,body[data-mode="fiches"] h1{padding-left:40px}
   }
   $("thFs").addEventListener("input",function(){T.fs=Number($("thFs").value);$("thFsv").textContent=T.fs+" %";apply();save();});
   $("thRs").addEventListener("click",function(){T={mode:"auto",accent:"",text:"",fs:100,shape:"uniforme",font:""};apply();save();paint();});
-  function close(){modal.hidden=true;}
+  var langOnly=false;
+  function close(){modal.hidden=true;langOnly=false;}
   $("thX").addEventListener("click",close);
   modal.addEventListener("click",function(e){if(e.target===modal){close();}});
   document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!modal.hidden){close();}});
   var TT={thColors:"Couleurs",thTheme:"Thème et taille de police",thFont:"Style d’écriture",thFrame:"Cadrage",thLang:"Langue"};
-  function showV(v){$("thMain").hidden=!!v;["thColors","thTheme","thFont","thFrame","thLang"].forEach(function(id){$(id).hidden=id!==v;});$("thT").textContent=v?TT[v]:"Paramètres";}
+  function showV(v){$("thMain").hidden=!!v;["thColors","thTheme","thFont","thFrame","thLang"].forEach(function(id){$(id).hidden=id!==v;});$("thT").textContent=v?TT[v]:"Police et couleurs";}
   [].forEach.call(modal.querySelectorAll("[data-v]"),function(bn){bn.addEventListener("click",function(){showV(bn.getAttribute("data-v"));});});
-  [].forEach.call(modal.querySelectorAll(".thback:not(.thmenu)"),function(bn){bn.addEventListener("click",function(){showV("");});});
+  [].forEach.call(modal.querySelectorAll(".thback:not(.thmenu)"),function(bn){bn.addEventListener("click",function(){if(langOnly&&bn.closest("#thLang")){close();$("mnBkBox").hidden=true;$("bkAllOut").hidden=true;$("bkModal").hidden=false;return;}showV("");});});
   $("thMain").querySelector(".thmenu").addEventListener("click",function(){close();$("mnBkBox").hidden=true;$("bkAllOut").hidden=true;$("bkModal").hidden=false;});
-  $("mnSet").addEventListener("click",function(){$("bkModal").hidden=true;paint();showV("");modal.hidden=false;});
+  $("mnSet").addEventListener("click",function(){$("bkModal").hidden=true;langOnly=false;$("thLang").querySelector(".thback").textContent="‹ Police et couleurs";paint();showV("");modal.hidden=false;});
+  $("mnLang").addEventListener("click",function(){$("bkModal").hidden=true;langOnly=true;$("thLang").querySelector(".thback").textContent="‹ Menu";paint();showV("thLang");modal.hidden=false;});
 })();
 </script>
 <script>
@@ -1706,7 +1787,7 @@ body[data-mode="list"] h1,body[data-mode="fiches"] h1{padding-left:40px}
   var LK="sciblmd-lang",L="fr";
   try{var s=localStorage.getItem(LK);if(s==="en"||s==="mg"){L=s;}}catch(e){}
   var D={
-"Paramètres":["Settings","Fandrindrana"],"‹ Paramètres":["‹ Settings","‹ Fandrindrana"],"‹ Menu":["‹ Menu","‹ Menio"],"Menu":["Menu","Menio"],
+"Paramètres":["Settings","Fandrindrana"],"Police et couleurs":["Font and colors","Endrika sy loko"],"‹ Police et couleurs":["‹ Font and colors","‹ Endrika sy loko"],"‹ Paramètres":["‹ Settings","‹ Fandrindrana"],"‹ Menu":["‹ Menu","‹ Menio"],"Menu":["Menu","Menio"],
 "Couleurs":["Colors","Loko"],"Thème et taille de police":["Theme and font size","Lohahevitra sy habe soratra"],
 "Style d’écriture":["Font style","Karazana soratra"],"Cadrage":["Framing","Endriky ny efitra"],"Langue":["Language","Fiteny"],
 "Réinitialiser les paramètres":["Reset settings","Averina ny fandrindrana"],"Couleur principale":["Main color","Loko fototra"],
@@ -1973,6 +2054,49 @@ sp.addEventListener("click",out);setTimeout(out,1600);})();
   var ht=document.getElementById("home");
   if(ht){new MutationObserver(regle).observe(ht,{attributes:true,attributeFilter:["hidden"],subtree:true,childList:true});}
   regle();
+})();
+</script>
+<script>
+(function(){
+  function $(i){return document.getElementById(i);}
+  function vis(id){var e=$(id);return !!e&&!e.hidden;}
+  var tmr=null,tEl=null;
+  function toast(t){
+    if(!tEl){tEl=document.createElement("div");tEl.className="noprint";tEl.setAttribute("role","status");
+      tEl.style.cssText="position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);max-width:88%;padding:10px 16px;border-radius:20px;background:rgba(30,30,30,.92);color:#fff;font-size:14px;z-index:99;text-align:center;pointer-events:none";
+      document.body.appendChild(tEl);}
+    tEl.textContent=t;tEl.hidden=false;
+  }
+  function untoast(){if(tEl){tEl.hidden=true;}}
+  function guard(){try{if(!(history.state&&history.state.sci==="guard")){history.pushState({sci:"guard"},"");}}catch(e){}}
+  try{if(!(history.state&&history.state.sci==="guard")){history.replaceState({sci:"base"},"");}}catch(e){}
+  ["pointerdown","touchstart","click","keydown"].forEach(function(ev){document.addEventListener(ev,guard,{capture:true,passive:true});});
+  var last=0;
+  function handleBack(){
+    if(vis("pwModal")){var no=$("pwNo");if(no&&!no.hidden){no.click();}return true;}
+    if(window.SCIPW&&window.SCIPW.back()){return true;}
+    if(vis("thModal")){
+      if($("thMain").hidden){
+        var open=["thColors","thTheme","thFont","thFrame","thLang"].filter(function(id){return vis(id);})[0];
+        if(open){var b=$(open).querySelector(".thback");if(b){b.click();return true;}}}
+      var mb=document.querySelector("#thMain .thmenu");if(mb){mb.click();return true;}
+      $("thModal").hidden=true;return true;}
+    if(vis("bkModal")){
+      if(vis("bkAllOut")){$("bkAllOut").hidden=true;return true;}
+      if(vis("mnBkBox")){$("mnBkBox").hidden=true;return true;}
+      $("bkModal").hidden=true;return true;}
+    if(window.SCINAV&&window.SCINAV.backMode()){return true;}
+    return false;
+  }
+  window.addEventListener("popstate",function(e){
+    var st=e.state;
+    if(!(st&&st.sci==="base")){return;}
+    if(handleBack()){untoast();guard();return;}
+    var now=Date.now();
+    if(now-last<2000){untoast();last=0;try{history.back();}catch(x){}try{window.close();}catch(x){}return;}
+    last=now;guard();toast("Appuie encore une fois pour quitter");
+    clearTimeout(tmr);tmr=setTimeout(function(){untoast();last=0;},2000);
+  });
 })();
 </script>
 </body>
