@@ -131,7 +131,7 @@ body:not([data-mode="est"]):not([data-mode="fci"]) #mLock{display:none}
 #mode .ic{background:transparent;color:var(--text);display:inline-flex;border:none;border-bottom:3px solid transparent;border-radius:0;line-height:1;padding:4px 8px;opacity:.55}
 #mode .ic.on{background:transparent;color:var(--accent);border-bottom-color:var(--accent);opacity:1}
 @media print{@page{size:A4;margin:10mm}body *{visibility:hidden}#fci,#fci *{visibility:visible}#fci{position:absolute;left:0;top:0;width:100%}.noprint{display:none!important}.paper{background:#fff!important;color:#111!important;border:none;padding:0}.paper label,.fs,.foot{color:#444!important}.paper input,.paper select{background:#fff!important;color:#111!important;border:none;border-bottom:1px solid #000;border-radius:0;padding:1px 0;font-size:10px;-webkit-appearance:none;appearance:none}.fh>div{background:#fff!important;border:1px solid #333;border-radius:0}.bar,.th{background:#333!important;color:#fff!important;border-radius:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}.tg{border:1px solid #333;border-radius:0;min-width:0}.td{border-top:1px solid #999}.tw{overflow:visible}}
-body[data-mode]::before{content:"";position:fixed;inset:0;z-index:-1;transform-origin:0 0;transform:translate(var(--bgx,0px),var(--bgy,0px)) scale(var(--bgs,1));pointer-events:none;background:var(--text);opacity:.36;-webkit-mask:url(fond-traits.png) center/cover no-repeat;mask:url(fond-traits.png) center/cover no-repeat}
+body[data-mode]::before{content:"";position:fixed;top:0;left:0;width:var(--bgw,100vw);height:var(--bgh,100vh);z-index:-1;transform-origin:0 0;transform:translate(var(--bgx,0px),var(--bgy,0px)) scale(var(--bgs,1));pointer-events:none;background:var(--text);opacity:.36;-webkit-mask:url(fond-traits.png) center/cover no-repeat;mask:url(fond-traits.png) center/cover no-repeat}
 @media print{body[data-mode]::before{display:none}}
 .mrow{display:flex;align-items:center;gap:14px;width:100%;margin-top:8px;padding:13px 12px;text-align:left;font-size:1rem;background:transparent;border:1px solid var(--border);border-radius:var(--rad2,10px);color:var(--text)}
 .mrow svg{flex:0 0 auto;color:var(--accent)}
@@ -149,6 +149,21 @@ body[data-mode="list"] h1,body[data-mode="fiches"] h1{padding-left:40px}
 #splash .sp2{font-size:2.1rem}
 @media print{#splash{display:none!important}}
 </style>
+<script>
+(function(){
+  // Fond stable : on fixe la taille du fond sur la taille de l'écran, pour qu'il ne bouge plus quand l'appli passe en plein écran
+  var d=document.documentElement,lastLand=null;
+  function f(){
+    var land=window.innerWidth>window.innerHeight;
+    if(land===lastLand){return;}
+    lastLand=land;
+    var a=Math.min(screen.width,screen.height),b=Math.max(screen.width,screen.height);
+    d.style.setProperty("--bgw",(land?b:a)+"px");
+    d.style.setProperty("--bgh",(land?a:b)+"px");
+  }
+  try{f();window.addEventListener("resize",f);}catch(e){}
+})();
+</script>
 </head>
 <body>
 <div id="splash" class="noprint" aria-hidden="true"><div class="sp1">ICS Data Collector</div></div>
